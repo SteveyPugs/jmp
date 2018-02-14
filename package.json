@@ -1,0 +1,26 @@
+{
+  "name": "jmp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SteveyPugs/jmp.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SteveyPugs/jmp/issues"
+  },
+  "homepage": "https://github.com/SteveyPugs/jmp#readme",
+  "dependencies": {
+    "bootstrap": "4.0.0",
+    "express": "4.16.2",
+    "jquery": "3.3.1",
+    "npm": "5.6.0",
+    "popper.js": "1.12.9"
+  }
+}
