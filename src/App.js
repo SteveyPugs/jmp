@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import '../node_modules/bootstrap/dist/css/bootstrap.css';
 import './App.css';
-import { Collapse, Navbar, NavbarToggler, Dropdown, NavbarBrand, Nav, NavItem, NavLink, DropdownToggle, DropdownMenu, DropdownItem, Jumbotron, Button, Container, Row, Col } from 'reactstrap';
+import { Collapse, Navbar, NavbarToggler, Dropdown, NavbarBrand, Nav, NavItem, NavLink, DropdownToggle, DropdownMenu, DropdownItem, Jumbotron, Button, Container, Row, Col, Card, CardText, CardBody, CardTitle, Form, FormGroup, Label, Input, Alert } from 'reactstrap';
 
 export default class App extends Component {
 	constructor(props) {
@@ -49,9 +49,19 @@ export default class App extends Component {
 							</Nav>
 						</Collapse>
 					</Navbar>
-					<Route exact path="/" component={Home} />
-					<Route path="/who-we-are" component={Who} />
-					<Route path="/contact" component={Contact} />
+					<br />
+					<Container>
+						<Row>
+							<Col>
+								<Switch>
+									<Route exact path="/" component={Home} />
+									<Route path="/who-we-are" component={Who} />
+									<Route path="/contact" component={Contact} />
+									<Route component={NoMatch} />
+								</Switch>
+							</Col>
+						</Row>
+					</Container>
 				</div>
 			</Router>
 		);
@@ -59,20 +69,36 @@ export default class App extends Component {
 }
 
 const Home = () => (
-	<Container>
-		<Row>
-			<Col>
-			<br />
-				<Jumbotron>
-					<h1 className="display-3">Property Management. Made Simple.</h1>
-					<p>Managing your property can be as hassle. Let&apos;s make it simple.</p>
-					<p className="lead"><Button color="primary">Manage with Us</Button></p>
-				</Jumbotron>
-			</Col>
-		</Row>
-	</Container>
+	<Jumbotron>
+		<h1 className="display-3">Property Management. Made Simple.</h1>
+		<p>Managing your property can be as hassle. Let&apos;s make it simple.</p>
+		<p className="lead"><Button color="primary" href="/register">Manage with Us</Button></p>
+	</Jumbotron>
 );
 
-const Who = () => (<h2>Who</h2>);
+const Who = () => (
+	<Card>
+		<CardBody>
+			<CardTitle>Who We Are</CardTitle>
+			<CardText>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</CardText>
+		</CardBody>
+	</Card>
+);
 
-const Contact = () => (<h2>Contact</h2>);
+const Contact = () => (
+	<Form>
+		<Alert color="dark">
+			<FormGroup>
+				<Label for="ContactEmail">Email</Label>
+				<Input type="email" name="email" id="ContactEmail" />
+			</FormGroup>
+			<FormGroup>
+				<Label for="ContactText">What do you need?</Label>
+				<Input type="textarea" name="text" id="ContactText" />
+			</FormGroup>
+			<Button>Submit</Button>
+		</Alert>
+	</Form>
+);
+
+const NoMatch = ({ location }) => (<h1>404</h1>);
