@@ -1,26 +1,19 @@
 {
-  "name": "jmp",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/SteveyPugs/jmp.git"
-  },
-  "author": "",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/SteveyPugs/jmp/issues"
-  },
-  "homepage": "https://github.com/SteveyPugs/jmp#readme",
+  "name": "my-app",
+  "version": "0.1.0",
+  "private": true,
   "dependencies": {
     "bootstrap": "4.0.0",
-    "express": "4.16.2",
-    "jquery": "3.3.1",
-    "npm": "5.6.0",
-    "popper.js": "1.12.9"
+    "react": "16.2.0",
+    "react-dom": "16.2.0",
+    "react-router-dom": "4.2.2",
+    "react-scripts": "1.1.1",
+    "reactstrap": "5.0.0-beta"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
   }
 }
