@@ -5,7 +5,6 @@ import './App.css';
 import { AvForm, AvField, AvRadio, AvRadioGroup } from 'availity-reactstrap-validation';
 import { Collapse, Navbar, NavbarToggler, Dropdown, NavbarBrand, Nav, NavItem, NavLink, DropdownToggle, DropdownMenu, DropdownItem, Jumbotron, Button, Container, Row, Col, Card, CardText, CardBody, CardTitle, Form, FormGroup, Label, Input, Modal, ModalHeader, ModalBody } from 'reactstrap';
 
-
 export default class App extends Component {
 	constructor(props) {
 		super(props);
@@ -105,15 +104,13 @@ const Contact = () => (
 class Register extends React.Component {
 	constructor(props) {
 		super(props);
-		this.handleValidSubmit = this.handleValidSubmit.bind(this);
 		this.state = {
 			modal: false
 		};
 		this.toggle = this.toggle.bind(this);
-		console.log(this.toggle)
+		this.handleValidSubmit = this.handleValidSubmit.bind(this);
 	}
 	handleValidSubmit(event, values) {
-		this.setState({values});
 		fetch("/user", {
 			method: "POST",
 			headers: {
@@ -124,12 +121,14 @@ class Register extends React.Component {
 		}).then(function(response) {
 			return response.json();
 		}).then(function(data) {
-			if(data.name === "SequelizeUniqueConstraintError"){
-				console.log(this)
-			}
-			else{
-				console.log(data)
-			}
+			//go the post the get route for completion
+		});
+	}
+	verifyEmail(value, ctx, input, cb){
+		fetch("/user/verify?Email=" + value).then(function(response) {
+			return response.json();
+		}).then(function(data) {
+			cb(value.length > 0 ? (data < 1 ? true : "Email already registered") : "This field is invalid");
 		});
 	}
 	toggle() {
@@ -154,7 +153,7 @@ class Register extends React.Component {
 					<AvField name="City" label="City" required />
 					<AvField name="State" label="State" required />
 					<AvField name="NumberOfUnits" label="Number of Units" required type="number" min="1" max="999" />
-					<AvField name="Email" label="E-Mail" required type="email" />
+					<AvField name="Email" label="E-Mail" required type="email" validate={{async: this.verifyEmail}} />
 					<FormGroup>
 						<Button color="primary" size="lg" block>Register</Button>
 					</FormGroup>

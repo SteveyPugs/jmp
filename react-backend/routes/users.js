@@ -1,7 +1,18 @@
 var express = require('express');
 var router = express.Router();
 var models = require("../models");
-console.log()
+
+router.get("/verify", function(req, res, next){
+	models.User.count({
+		where:{
+			Email: req.query.Email
+		}
+	}).then(c => {
+		res.json(c);
+	}).catch(function(err){
+		res.status(500).send(err)
+	});
+});
 
 router.post("/", function(req, res, next){
 	console.log(req.body);
