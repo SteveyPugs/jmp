@@ -6,8 +6,8 @@ const sequelize = new Sequelize(config.db, config.user, config.pass, {
 });
 
 var models = [{
-	name: "User",
-	file: "user"
+	name: "LandLord",
+	file: "landLord"
 },{
 	name: "PropertyType",
 	file: "propertytype"
@@ -20,7 +20,7 @@ models.forEach(function(model) {
 sequelize.authenticate().then(function(err){
 	if(err) console.log(err);
 	(function(model){
-		model.User.belongsTo(model.PropertyType); 
+		model.LandLord.belongsTo(model.PropertyType); 
 		sequelize.sync({
 			force: false
 		}).then(function(){

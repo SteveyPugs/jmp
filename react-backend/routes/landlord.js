@@ -3,7 +3,7 @@ var router = express.Router();
 var models = require("../models");
 
 router.get("/verify", function(req, res, next){
-	models.User.count({
+	models.LandLord.count({
 		where:{
 			Email: req.query.Email
 		}
@@ -15,8 +15,7 @@ router.get("/verify", function(req, res, next){
 });
 
 router.post("/", function(req, res, next){
-	console.log(req.body);
-	models.User.create({
+	models.LandLord.create({
 		FullName: req.body.Name,
 		Address: req.body.Address,
 		City: req.body.City,
