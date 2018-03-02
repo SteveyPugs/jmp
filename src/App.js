@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import '../node_modules/bootstrap/dist/css/bootstrap.css';
 import './App.css';
-import { Collapse, Navbar, NavbarToggler, Dropdown, NavbarBrand, Nav, NavItem, NavLink, DropdownToggle, DropdownMenu, DropdownItem, Jumbotron, Button, Container, Row, Col, Card, CardText, CardBody, CardTitle, Form, FormGroup, Label, Input, Alert } from 'reactstrap';
+import { AvForm, AvField, AvRadio, AvRadioGroup } from 'availity-reactstrap-validation';
+import { Collapse, Navbar, NavbarToggler, Dropdown, NavbarBrand, Nav, NavItem, NavLink, DropdownToggle, DropdownMenu, DropdownItem, Jumbotron, Button, Container, Row, Col, Card, CardText, CardBody, CardTitle, Form, FormGroup, Label, Input, Modal, ModalHeader, ModalBody } from 'reactstrap';
+
 
 export default class App extends Component {
 	constructor(props) {
@@ -57,6 +59,7 @@ export default class App extends Component {
 									<Route exact path="/" component={Home} />
 									<Route path="/who-we-are" component={Who} />
 									<Route path="/contact" component={Contact} />
+									<Route path="/register" component={Register} />
 									<Route component={NoMatch} />
 								</Switch>
 							</Col>
@@ -87,18 +90,81 @@ const Who = () => (
 
 const Contact = () => (
 	<Form>
-		<Alert color="dark">
-			<FormGroup>
-				<Label for="ContactEmail">Email</Label>
-				<Input type="email" name="email" id="ContactEmail" />
-			</FormGroup>
-			<FormGroup>
-				<Label for="ContactText">What do you need?</Label>
-				<Input type="textarea" name="text" id="ContactText" />
-			</FormGroup>
-			<Button>Submit</Button>
-		</Alert>
+		<FormGroup>
+			<Label for="ContactEmail">Email</Label>
+			<Input type="email" name="email" id="ContactEmail" />
+		</FormGroup>
+		<FormGroup>
+			<Label for="ContactText">What do you need?</Label>
+			<Input type="textarea" name="text" id="ContactText" />
+		</FormGroup>
+		<Button>Submit</Button>
 	</Form>
 );
 
+class Register extends React.Component {
+	constructor(props) {
+		super(props);
+		this.handleValidSubmit = this.handleValidSubmit.bind(this);
+		this.state = {
+			modal: false
+		};
+		this.toggle = this.toggle.bind(this);
+		console.log(this.toggle)
+	}
+	handleValidSubmit(event, values) {
+		this.setState({values});
+		fetch("/user", {
+			method: "POST",
+			headers: {
+				"Accept": "application/json",
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(values)
+		}).then(function(response) {
+			return response.json();
+		}).then(function(data) {
+			if(data.name === "SequelizeUniqueConstraintError"){
+				console.log(this)
+			}
+			else{
+				console.log(data)
+			}
+		});
+	}
+	toggle() {
+		this.setState({
+			modal: !this.state.modal
+		});
+	}
+	render() {
+		const defaultValues = {
+			ClientType: "Residential"
+		};
+		return (
+			<div>
+				<AvForm model={defaultValues} onValidSubmit={this.handleValidSubmit}>
+					<p className="text-muted">Tell us more about who you are and we will get back to you shortly</p>
+					<AvField name="Name" label="Full Name" required />
+					<AvRadioGroup inline name="ClientType" label="Type of Property">
+						<AvRadio label="Residential" value="1" />
+						<AvRadio label="Commercial" value="2" />
+					</AvRadioGroup>
+					<AvField name="Address" label="Street Address" required />
+					<AvField name="City" label="City" required />
+					<AvField name="State" label="State" required />
+					<AvField name="NumberOfUnits" label="Number of Units" required type="number" min="1" max="999" />
+					<AvField name="Email" label="E-Mail" required type="email" />
+					<FormGroup>
+						<Button color="primary" size="lg" block>Register</Button>
+					</FormGroup>
+				</AvForm>
+				<Modal isOpen={this.state.modal} toggle={this.toggle} className={this.props.className}>
+					<ModalHeader toggle={this.toggle}>Email Already Registed</ModalHeader>
+					<ModalBody>Please try a different Email</ModalBody>
+				</Modal>
+			</div>
+		);
+	}
+};
 const NoMatch = ({ location }) => (<h1>404</h1>);
