@@ -1,0 +1,56 @@
+include partials/header.pug
+body
+	include partials/nav.pug
+	br
+	.container
+		.row
+			.col-lg
+				h4 Tell us more about who you are...
+				hr
+				form(class="needs-validation" novalidate method="post" action="/register")
+					.row
+						.col
+							label(for="RegisterEmail") Email Address
+							input#RegisterEmail.form-control.form-control-sm(type="email" placeholder="name@example.com" required name="RegisterEmail")
+							.invalid-tooltip Please enter a valid e-mail
+						.col
+							label(for="RegisterFullName") Full Name
+							input#RegisterFullName.form-control.form-control-sm(type="text" placeholder="John Doe" required name="RegisterFullName")
+							.invalid-tooltip Please enter your full name
+					br
+					.row
+						.col
+							label(for="RegisterAddress") Address of Property
+							input#RegisterAddress.form-control.form-control-sm(type="text" placeholder="1 Apple Street" required name="RegisterAddress")
+							.invalid-tooltip Please enter your street address
+						.col
+							label(for="RegisterCity") City of Property
+							input#RegisterCity.form-control.form-control-sm(type="text" placeholder="New York" required name="RegisterCity")
+							.invalid-tooltip Please enter your city
+					br
+					.row
+						.col
+							label(for="RegisterState") State of Property
+							input#RegisterState.form-control.form-control-sm(type="text" placeholder="NY" required name="RegisterState")
+							.invalid-tooltip Please enter your state
+						.col
+							label(for="RegisterNumberOfUnits") Number of Units
+							input#RegisterNumberOfUnits.form-control.form-control-sm(type="number" placeholder="1" min="1" max="999" required name="RegisterNumberOfUnits")
+							.invalid-tooltip Please enter the number of units
+					br
+					.row
+						.col
+							label Type of Property
+							br
+							.form-check
+								input#RegisterTypeResidential.form-check-input(type="radio" name="RegisterTypeOptions" value="1" required)
+								label.form-check-label(for="RegisterTypeResidential") Residential
+							.form-check
+								input#RegisterTypeCommerical.form-check-input(type="radio" name="RegisterTypeOptions" value="2" required)
+								label.form-check-label(for="RegisterTypeCommerical") Commercial
+								br
+								.invalid-tooltip Please choose a property type
+						.col
+					br
+					button.btn.btn-dark.btn-block(type="submit") Register					
+include partials/footer.pug
