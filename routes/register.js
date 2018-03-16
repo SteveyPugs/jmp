@@ -1,4 +1,6 @@
-var express = require("express")
+var express = require("express");
+var bcrypt = require("bcrypt");
+var Chance = require("chance");
 var router = express.Router();
 var models = require("../models");
 
@@ -15,20 +17,22 @@ router.get("/complete", function (req, res) {
 });
 
 router.post("/", function (req, res) {
+	var chance = new Chance();
 	models.Landlord.count({
 		where:{
 			LandlordEmail: req.body.RegisterEmail
 		},
 		raw: true
 	}).then(function(landlord){
-		console.log(landlord)
 		if(landlord > 0){
 			res.redirect("/register/sorry");
 		}
 		else{
+			var password = chance.word({ length: 10 }).toUpperCase();
+			console.log(password)
 			models.Landlord.create({
 				LandlordEmail: req.body.RegisterEmail,
-				LandlordPassword: "test",
+				LandlordPassword: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
 				LandlordFullName: req.body.RegisterFullName
 			}).then(function(landlord){
 				models.Property.create({
