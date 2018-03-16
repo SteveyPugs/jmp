@@ -1,0 +1,16 @@
+#LandLordModal.modal.fade(tabindex="-1" role="dialog" aria-hidden="true")
+  .modal-dialog.modal-dialog-centered.modal-sm(role="document")
+    .modal-content
+      .modal-header
+        h5#exampleModalLabel.modal-title Landlord Login
+      .modal-body
+        form(class="needs-validation" novalidate method="post" action="/login/landlord")
+          .form-group
+            label(for="LandlordEmail") E-Mail
+            input#LandlordEmail.form-control.form-control-sm(type="email" placeholder="name@example.com" name="LandlordEmail" required)
+            .invalid-feedback Please enter a valid e-mail
+          .form-group
+            label(for="LandlordPassword") Password
+            input#LandlordPassword.form-control.form-control-sm(type="password" name="LandlordPassword" required)
+            .invalid-feedback Please enter a password
+          button.btn.btn-dark.btn-block.btn-sm(type="submit") Sign In

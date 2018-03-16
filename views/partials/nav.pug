@@ -13,4 +13,5 @@ nav.navbar.navbar-expand-lg.navbar-dark(style="background-color: #00b894;")
           | Client Login
         .dropdown-menu(aria-labelledby="loginDropdown")
           a.dropdown-item(href="/tenant") Tenant
-          a.dropdown-item(href="/landlord") Landlord
+          a.dropdown-item(data-toggle="modal" data-target="#LandLordModal") Landlord
+include landlordlogin.pug
