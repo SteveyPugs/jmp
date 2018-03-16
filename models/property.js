@@ -22,6 +22,10 @@ module.exports = function(sequelize, DataTypes){
 			type: DataTypes.INTEGER,
 			allowNull: false
 		},
+		PropertyZip: {
+			type: DataTypes.INTEGER,
+			allowNull: false
+		},
 		PropertyType: {
 			type: DataTypes.INTEGER,
 			allowNull: false
