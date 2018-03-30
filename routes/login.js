@@ -3,7 +3,6 @@ var bcrypt = require("bcrypt");
 var router = express.Router();
 var models = require("../models");
 
-
 router.post("/landlord", function (req, res) {
 	models.Landlord.find({
 		where:{

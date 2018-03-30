@@ -2,9 +2,9 @@
   .modal-dialog.modal-dialog-centered.modal-sm(role="document")
     .modal-content
       .modal-header
-        h5#exampleModalLabel.modal-title Landlord Login
+        h5#LandlordModalLabel.modal-title Landlord Login
       .modal-body
-        form(class="needs-validation" novalidate method="post" action="/login/landlord")
+        form.needs-validation(novalidate method="post" action="/login/landlord")
           .form-group
             label(for="LandlordEmail") E-Mail
             input#LandlordEmail.form-control.form-control-sm(type="email" placeholder="name@example.com" name="LandlordEmail" required)

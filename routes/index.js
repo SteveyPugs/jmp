@@ -1,5 +1,6 @@
 var express = require("express");
 var lodash = require("lodash");
+var models = require("../models");
 var router = express.Router();
 
 router.get("/", function (req, res) {
@@ -11,7 +12,16 @@ router.get("/dashboard/landlord", function (req, res) {
 		res.redirect("/");
 	}
 	else{
-		res.render("landlord_dashboard", { title: "Home" });
+		res.render("landlord_dashboard", { title: "Landlord Dashboard" });
+	}
+});
+
+router.get("/dashboard/landlord/property", function (req, res) {
+	if(lodash.isEmpty(req.cookies)){
+		res.redirect("/");
+	}
+	else{
+		res.render("landlord_dashboard_property", { title: "Landlord Dashboard - Property" });
 	}
 });
 

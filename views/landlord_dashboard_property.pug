@@ -1,0 +1,47 @@
+include partials/header.pug
+include partials/nav_landlord.pug
+br
+.container-fluid(ng-app="Props" class="ng-cloak")
+	div(ng-controller="PropertyController")
+		.row
+			.col
+				label(for="PropertySelect") Select a Property
+				select#PropertySelect.form-control.form-control-sm(ng-change="getUnits()" ng-model="selectedProperty" ng-options='property as (property.PropertyAddress + ", " + property.PropertyCity + ", " + property.PropertyState + " " + property.PropertyZip) for property in properties')
+		br
+		.row(ng-if="selectedProperty")
+			.col-lg-3
+				.card
+					.card-body
+						h5.card-title {{selectedProperty.PropertyAddress}}
+						h6.card-subtitle.mb-2.text-muted {{selectedProperty.PropertyCity + ", " + selectedProperty.PropertyState}}
+						a.card-link(href='#') Add Emergency Contact
+						br
+						a.card-link(href='#') Add Lease
+
+			.col-lg-9
+				#accordion
+					.card(ng-repeat="selectUnit in selectUnits")
+						div 
+						div.card-header(id="unitHeading{{selectUnit.UnitID}}" style="background-color:{{selectUnit.UnitVacant ? '#26A65B' : '#D24D57'}}")
+							h5.mb-0
+								button.btn.btn-light.collapsed(data-toggle="collapse" data-target="#unitCollapse{{selectUnit.UnitID}}" aria-expanded="false" aria-controls="unitCollapse{{selectUnit.UnitID}}") Unit &num;{{selectUnit.UnitID}}
+						div.collapse.show(id="unitCollapse{{selectUnit.UnitID}}" aria-labelledby="unitHeading{{selectUnit.UnitID}}" )
+							.card-body
+								.row
+									.col-lg-2(ng-if="!selectUnit.UnitTenants.Tenant.TenantID")
+										button.btn.btn-outline-dark.btn-block(type="button" data-toggle="modal" data-target="#Tenant" data-unit="{{selectUnit.UnitID}}") Fill Vacancy
+									.col-lg(ng-if="selectUnit.UnitTenants.Tenant.TenantID")
+										.row
+											.col-lg
+												label.font-weight-bold Test
+												br
+												| {{selectUnit.UnitTenants.Tenant.TenantFullName}}
+											.col-lg
+												label.font-weight-bold Email
+												br
+												| {{selectUnit.UnitTenants.Tenant.TenantOptOut ? "N/A" : selectUnit.UnitTenants.Tenant.TenantEmail}}
+										
+		include partials/tenant_form.pug
+		include partials/tenant_form_finish.pug
+include partials/footer.pug
+script(src="/validate.js")

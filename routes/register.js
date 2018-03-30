@@ -1,6 +1,7 @@
 var express = require("express");
 var bcrypt = require("bcrypt");
 var Chance = require("chance");
+var lodash = require("lodash");
 var router = express.Router();
 var models = require("../models");
 
@@ -44,7 +45,18 @@ router.post("/", function (req, res) {
 					PropertyType: req.body.RegisterTypeOptions,
 					LandlordID: landlord.LandlordID
 				}).then(function(property){
-					res.redirect("/register/complete");
+					var units = [];
+					lodash.times(req.body.RegisterNumberOfUnits, function(v){
+						units.push({
+							UnitTag: v + 1,
+							PropertyID: property.PropertyID
+						});
+					});
+					models.Unit.bulkCreate(units).then(function(units){
+						res.redirect("/register/complete");
+					}).catch(function(err){
+						res.send(err.stack);
+					});
 				}).catch(function(err){
 					res.send(err.stack);
 				});

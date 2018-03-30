@@ -13,6 +13,15 @@ var models = [{
 },{
 	name: "Property",
 	file: "property"
+},{
+	name: "Unit",
+	file: "unit"
+},{
+	name: "Tenant",
+	file: "tenant"
+},{
+	name: "UnitTenant",
+	file: "unit_tenant"
 }];
 
 models.forEach(function(model) {
@@ -25,6 +34,36 @@ sequelize.authenticate().then(function(err){
 		model.Property.belongsTo(model.Landlord, {
 			foreignKey: {
 				name: "LandlordID",
+				allowNull: false
+			}
+		});
+		model.Unit.belongsTo(model.Property, {
+			foreignKey: {
+				name: "PropertyID",
+				allowNull: false
+			}
+		});
+		model.Unit.hasMany(model.UnitTenant, {
+			foreignKey: {
+				name: "UnitID",
+				allowNull: false
+			}
+		});
+		model.UnitTenant.belongsTo(model.Unit, {
+			foreignKey: {
+				name: "UnitID",
+				allowNull: false
+			}
+		});
+		model.Tenant.hasMany(model.UnitTenant, {
+			foreignKey: {
+				name: "TenantID",
+				allowNull: false
+			}
+		});
+		model.UnitTenant.belongsTo(model.Tenant, {
+			foreignKey: {
+				name: "TenantID",
 				allowNull: false
 			}
 		});
