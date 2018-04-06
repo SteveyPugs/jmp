@@ -22,6 +22,9 @@ var models = [{
 },{
 	name: "UnitTenant",
 	file: "unit_tenant"
+},{
+	name: "PropertyContact",
+	file: "property_contact"
 }];
 
 models.forEach(function(model) {
@@ -38,6 +41,12 @@ sequelize.authenticate().then(function(err){
 			}
 		});
 		model.Unit.belongsTo(model.Property, {
+			foreignKey: {
+				name: "PropertyID",
+				allowNull: false
+			}
+		});
+		model.PropertyContact.belongsTo(model.Property, {
 			foreignKey: {
 				name: "PropertyID",
 				allowNull: false

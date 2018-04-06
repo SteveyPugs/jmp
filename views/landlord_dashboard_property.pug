@@ -6,19 +6,19 @@ br
 		.row
 			.col
 				label(for="PropertySelect") Select a Property
-				select#PropertySelect.form-control.form-control-sm(ng-change="getUnits()" ng-model="selectedProperty" ng-options='property as (property.PropertyAddress + ", " + property.PropertyCity + ", " + property.PropertyState + " " + property.PropertyZip) for property in properties')
+				select#PropertySelect.form-control.form-control-sm(ng-change="getPropertyInformation()" ng-model="selectedProperty" ng-options='property as (property.PropertyAddress + ", " + property.PropertyCity + ", " + property.PropertyState + " " + property.PropertyZip) for property in properties')
 		br
 		.row(ng-if="selectedProperty")
 			.col-lg-3
 				.card
 					.card-body
-						h5.card-title {{selectedProperty.PropertyAddress}}
-						h6.card-subtitle.mb-2.text-muted {{selectedProperty.PropertyCity + ", " + selectedProperty.PropertyState}}
-						a.card-link(href='#') Add Emergency Contact
-						br
-						a.card-link(href='#') Add Lease
-
-			.col-lg-9
+						h5.card-title Menu
+						ul.list-unstyled
+							li
+								a.btn.btn-link(href="#", role="button" data-toggle="modal" data-target="#EmergencyContact" data-property="{{selectedProperty.PropertyID}}") Add Emergency Contact
+							li
+								a.btn.btn-link(href="#", role="button") Add Lease
+			.col-lg-6
 				#accordion
 					.card(ng-repeat="selectUnit in selectUnits")
 						div 
@@ -28,7 +28,7 @@ br
 						div.collapse.show(id="unitCollapse{{selectUnit.UnitID}}" aria-labelledby="unitHeading{{selectUnit.UnitID}}" )
 							.card-body
 								.row
-									.col-lg-2(ng-if="!selectUnit.UnitTenants.Tenant.TenantID")
+									.col-lg-3(ng-if="!selectUnit.UnitTenants.Tenant.TenantID")
 										button.btn.btn-outline-dark.btn-block(type="button" data-toggle="modal" data-target="#Tenant" data-unit="{{selectUnit.UnitID}}") Fill Vacancy
 									.col-lg(ng-if="selectUnit.UnitTenants.Tenant.TenantID")
 										.row
@@ -39,9 +39,19 @@ br
 											.col-lg
 												label.font-weight-bold Email
 												br
-												| {{selectUnit.UnitTenants.Tenant.TenantOptOut ? "N/A" : selectUnit.UnitTenants.Tenant.TenantEmail}}
-										
+												| {{selectUnit.UnitTenants.Tenant.TenantOptOut ? "Opt-Out" : selectUnit.UnitTenants.Tenant.TenantEmail}}
+			.col-lg-3
+				.card
+					.card-body
+						h5.card-title Emergency Contacts
+
+						address(ng-repeat="contact in contacts")
+							i {{contact.PropertyContactName}}
+							br
+							| {{contact.PropertyContactTelephone}}
+
 		include partials/tenant_form.pug
 		include partials/tenant_form_finish.pug
+		include partials/property_emergency_contact.pug
 include partials/footer.pug
 script(src="/validate.js")

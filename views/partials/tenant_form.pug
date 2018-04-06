@@ -6,8 +6,8 @@
 				button.close(type="button", data-dismiss="modal", aria-label="Close")
 					span(aria-hidden="true") ×
 			.modal-body
-				form.needs-validation#FillVacancy(name="FillVacancy" novalidate ng-submit="addTenant()")
-					input(type="hidden" name="UnitID" id="UnitID")
+				form.was-validated#FillVacancy(name="FillVacancy" novalidate ng-submit="addTenant()")
+					input(type="text" hidden="" name="UnitID" id="UnitID" ng-model="UnitID")
 					.form-group
 						label(for="TenantName") Full Name
 						input#TenantName.form-control.form-control-sm(type="text" ng-model="TenantName" placeholder="John Doe" ng-required="true")
