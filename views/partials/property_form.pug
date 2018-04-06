@@ -1,0 +1,47 @@
+#Property.modal.fade(tabindex="-1", role="dialog", aria-labelledby="PropertyTitle", aria-hidden="true")
+	.modal-dialog.modal-lg.modal-dialog-centered(role="document")
+		.modal-content
+			.modal-header
+				h5#PropertyLongTitle.modal-title New Property
+				button.close(type="button", data-dismiss="modal", aria-label="Close")
+					span(aria-hidden="true") ×
+			.modal-body
+				form.was-validated#NewProperty(name="NewProperty" novalidate ng-submit="addProperty()")
+					.row
+						.col
+							label(for="RegisterAddress") Address of Property
+							input#RegisterAddress.form-control.form-control-sm(type="text" placeholder="1 Apple Street" required ng-model="RegisterAddress" name="RegisterAddress")
+							.invalid-feedback Please enter the property street address
+						.col
+							label(for="RegisterCity") City of Property
+							input#RegisterCity.form-control.form-control-sm(type="text" placeholder="New York" required ng-model="RegisterCity" name="RegisterCity")
+							.invalid-feedback Please enter the property city
+					br
+					.row
+						.col
+							label(for="RegisterState") State of Property
+							input#RegisterState.form-control.form-control-sm.typeahead(type="text" placeholder="NY" required ng-model="RegisterState" name="RegisterState")
+							.invalid-feedback Please enter the property state
+						.col
+							label(for="RegisterNumberOfUnits") Number of Units
+							input#RegisterNumberOfUnits.form-control.form-control-sm(type="number" placeholder="1" min="1" max="999" required ng-model="RegisterNumberOfUnits" name="RegisterNumberOfUnits")
+							.invalid-feedback Please enter the number of units
+					br
+					.row
+						.col
+							label(for="RegisterZip") Zip of Property
+							input#RegisterZip.form-control.form-control-sm(type="text" maxlength="5" placeholder="10000" required ng-model="RegisterZip" name="RegisterZip")
+							.invalid-feedback Please enter the property zip code
+						.col
+							label Type of Property
+							br
+							.form-check
+								input#RegisterTypeResidential.form-check-input(type="radio" name="RegisterTypeOptions" value="1" required ng-model="RegisterTypeOptions")
+								label.form-check-label(for="RegisterTypeResidential") Residential
+							.form-check
+								input#RegisterTypeCommerical.form-check-input(type="radio" name="RegisterTypeOptions" value="2" required ng-model="RegisterTypeOptions")
+								label.form-check-label(for="RegisterTypeCommerical") Commercial
+								br
+								.invalid-feedback Please choose a property type
+					br
+					button.btn.btn-primary(ng-disabled="NewProperty.$invalid" type="submit") Add

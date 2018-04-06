@@ -6,6 +6,7 @@ br
 		.row
 			.col
 				label(for="PropertySelect") Select a Property
+				button.btn.btn-link.btn-sm(type="button" data-toggle="modal" data-target="#Property" data-landlord="x") Add New Property
 				select#PropertySelect.form-control.form-control-sm(ng-change="getPropertyInformation()" ng-model="selectedProperty" ng-options='property as (property.PropertyAddress + ", " + property.PropertyCity + ", " + property.PropertyState + " " + property.PropertyZip) for property in properties')
 		br
 		.row(ng-if="selectedProperty")
@@ -15,16 +16,16 @@ br
 						h5.card-title Menu
 						ul.list-unstyled
 							li
-								a.btn.btn-link(href="#", role="button" data-toggle="modal" data-target="#EmergencyContact" data-property="{{selectedProperty.PropertyID}}") Add Emergency Contact
+								a.btn.btn-link(href="#" style="font-size:13px;" role="button" data-toggle="modal" data-target="#EmergencyContact" data-property="{{selectedProperty.PropertyID}}") Add Emergency Contact
 							li
-								a.btn.btn-link(href="#", role="button") Add Lease
+								a.btn.btn-link(href="#" style="font-size:13px;" role="button") Add Lease
 			.col-lg-6
 				#accordion
 					.card(ng-repeat="selectUnit in selectUnits")
 						div 
 						div.card-header(id="unitHeading{{selectUnit.UnitID}}" style="background-color:{{selectUnit.UnitVacant ? '#26A65B' : '#D24D57'}}")
 							h5.mb-0
-								button.btn.btn-light.collapsed(data-toggle="collapse" data-target="#unitCollapse{{selectUnit.UnitID}}" aria-expanded="false" aria-controls="unitCollapse{{selectUnit.UnitID}}") Unit &num;{{selectUnit.UnitID}}
+								button.btn.btn-light.collapsed(data-toggle="collapse" data-target="#unitCollapse{{selectUnit.UnitID}}" aria-expanded="false" aria-controls="unitCollapse{{selectUnit.UnitID}}") Unit &num;{{selectUnit.UnitTag}}
 						div.collapse.show(id="unitCollapse{{selectUnit.UnitID}}" aria-labelledby="unitHeading{{selectUnit.UnitID}}" )
 							.card-body
 								.row
@@ -33,13 +34,23 @@ br
 									.col-lg(ng-if="selectUnit.UnitTenants.Tenant.TenantID")
 										.row
 											.col-lg
-												label.font-weight-bold Test
+												label.font-weight-bold Name
 												br
 												| {{selectUnit.UnitTenants.Tenant.TenantFullName}}
 											.col-lg
 												label.font-weight-bold Email
 												br
 												| {{selectUnit.UnitTenants.Tenant.TenantOptOut ? "Opt-Out" : selectUnit.UnitTenants.Tenant.TenantEmail}}
+								br
+								.row
+									.col-lg(ng-if="selectUnit.UnitTenants.Tenant.TenantID")
+										label.font-weight-bold Functions
+										br
+										.btn-group.btn-group-sm(role="group")
+											button.btn.btn-light(type="button") Payments
+											button.btn.btn-light(type="button") Repairs / Maintenance
+											button.btn.btn-light(type="button") Complaints
+											button.btn.btn-light(type="button") Evict
 			.col-lg-3
 				.card
 					.card-body
@@ -49,9 +60,8 @@ br
 							i {{contact.PropertyContactName}}
 							br
 							| {{contact.PropertyContactTelephone}}
-
 		include partials/tenant_form.pug
 		include partials/tenant_form_finish.pug
 		include partials/property_emergency_contact.pug
+		include partials/property_form.pug
 include partials/footer.pug
-script(src="/validate.js")

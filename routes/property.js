@@ -21,6 +21,39 @@ router.get("/", function (req, res) {
 	}
 });
 
+router.post("/", function (req, res) {
+	if(lodash.isEmpty(req.cookies)){
+		res.send("Access Denied");
+	}
+	else{
+		models.Property.create({
+			PropertyAddress: req.body.RegisterAddress,
+			PropertyCity: req.body.RegisterCity,
+			PropertyZip: req.body.RegisterZip,
+			PropertyState: req.body.RegisterState,
+			PropertyUnitCount: req.body.RegisterNumberOfUnits,
+			PropertyType: req.body.RegisterTypeOptions,
+			LandlordID: req.cookies.LandLordID
+		}).then(function(property){
+			var units = [];
+			lodash.times(req.body.RegisterNumberOfUnits, function(v){
+				units.push({
+					UnitTag: v + 1,
+					PropertyID: property.PropertyID
+				});
+			});
+			models.Unit.bulkCreate(units).then(function(units){
+				res.send(true);
+			}).catch(function(err){
+				res.send(err.stack);
+			});
+		}).catch(function(err){
+			res.send(err.stack);
+		});
+	}	
+});
+
+
 router.get("/contact/:PropertyID", function (req, res) {
 	if(lodash.isEmpty(req.cookies)){
 		res.send("Access Denied");

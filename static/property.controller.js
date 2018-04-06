@@ -1,10 +1,13 @@
 angular.module("Props", []).controller("PropertyController", function($scope, $http) {
 	// console.log($scope.properties)
-	$http.get("/property").then(function(response){
-		$scope.properties = response.data;
-	}, function(err){
-		console.log(err);
-	});
+	$scope.getPropertyList = function(){
+		$http.get("/property").then(function(response){
+			$scope.properties = response.data;
+		}, function(err){
+			console.log(err);
+		});
+	};
+	$scope.getPropertyList();
 	$scope.getPropertyInformation = function(){
 		$http.get("/unit/" + $scope.selectedProperty.PropertyID).then(function(response){
 			$scope.selectUnits = response.data;
@@ -65,4 +68,24 @@ angular.module("Props", []).controller("PropertyController", function($scope, $h
 			console.log(err);
 		});
 	};
+
+	$scope.addProperty = function(){
+		$http.post("/property", {
+			RegisterAddress: $scope.RegisterAddress,
+			RegisterCity: $scope.RegisterCity,
+			RegisterState: $scope.RegisterState,
+			RegisterNumberOfUnits: $scope.RegisterNumberOfUnits,
+			RegisterZip: $scope.RegisterZip,
+			RegisterTypeOptions: $scope.RegisterTypeOptions
+		}).then(function(response){
+			if(response){
+				$("#Property").modal("hide");
+				$scope.getPropertyList();
+			}
+		}, function(err){
+			console.log(err);
+		});
+	};
+
+	
 });
