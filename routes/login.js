@@ -10,7 +10,7 @@ router.post("/landlord", function (req, res) {
 		},
 		raw: true
 	}).then(function(landlord){
-		if(bcrypt.compareSync(req.body.LandlordPassword, landlord.LandlordPassword)){
+		if(landlord && bcrypt.compareSync(req.body.LandlordPassword, landlord.LandlordPassword)){
 			res.cookie("LandLordID", landlord.LandlordID);
 			res.redirect("/dashboard/landlord");
 		}
@@ -22,8 +22,32 @@ router.post("/landlord", function (req, res) {
 	});	
 });
 
+router.post("/tenant", function (req, res) {
+	models.Tenant.find({
+		where:{
+			TenantEmail: req.body.TenantEmail
+		},
+		raw: true
+	}).then(function(tenant){
+		if(tenant && bcrypt.compareSync(req.body.TenantPassword, tenant.TenantPassword)){
+			res.cookie("TenantID", tenant.TenantID);
+			res.redirect("/dashboard/tenant");
+		}
+		else{
+			res.redirect("/fail");
+		}
+	}).catch(function(err){
+		res.send(err.stack);
+	});	
+});
+
 router.get("/landlord/logout", function(req, res) {
 	res.clearCookie("LandLordID");
+	res.redirect("/");
+});
+
+router.get("/tenant/logout", function(req, res) {
+	res.clearCookie("TenantID");
 	res.redirect("/");
 });
 

@@ -16,6 +16,15 @@ router.get("/dashboard/landlord", function (req, res) {
 	}
 });
 
+router.get("/dashboard/tenant", function (req, res) {
+	if(lodash.isEmpty(req.cookies)){
+		res.redirect("/");
+	}
+	else{
+		res.render("tenant_dashboard", { title: "Tenant Dashboard" });
+	}
+});
+
 router.get("/dashboard/landlord/property", function (req, res) {
 	if(lodash.isEmpty(req.cookies)){
 		res.redirect("/");

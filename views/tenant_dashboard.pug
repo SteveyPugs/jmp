@@ -1,0 +1,104 @@
+include partials/header.pug
+include partials/nav_tenant.pug
+br
+.container-fluid(ng-app="Props" class="ng-cloak")
+	div(ng-controller="TenantController")
+
+		.card.text-center
+			.card-header
+				ul.nav.nav-tabs.card-header-tabs#TenantTabs(role="tablist")
+					li.nav-item
+						a#payments-tab.nav-link.active(data-toggle="tab", href="#payments", role="tab", aria-controls="payments", aria-selected="true") Payments
+					li.nav-item
+						a#grievance-tab.nav-link(data-toggle="tab", href="#grievance", role="tab", aria-controls="grievance", aria-selected="false") File Grievance(s)
+					li.nav-item
+						a#documents-tab.nav-link(data-toggle="tab", href="#documents", role="tab", aria-controls="documents", aria-selected="false") Documents
+			.card-body.text-left
+				#TenantTabsContent.tab-content
+					#payments.tab-pane.fade.show.active(role="tabpanel", aria-labelledby="payments-tab")
+						br
+						.row
+							.col-lg-3
+								.row
+									.col-lg
+										.card.bg-light
+											.card-header Payment Options
+											.card-body
+												span.badge.badge-info(ng-if="paymentSetting.PaymentCCNumber") Credit Card
+												span.badge.badge-info(ng-if="paymentSetting.PaymentCheckAccount") Checking Account
+												br(ng-if="!isObjectEmpty(paymentSetting)")
+												label(ng-if="paymentSetting.PaymentCCNumber")
+													small ****{{paymentSetting.PaymentCCNumber}}
+												label(ng-if="paymentSetting.PaymentCheckAccount")
+													small ****{{paymentSetting.PaymentCheckAccount}}
+												br(ng-if="!isObjectEmpty(paymentSetting)")
+												button.btn.btn-primary.btn-sm(type="button" data-toggle="modal" data-target="#Payment" ng-value="D") {{ isObjectEmpty(paymentSetting) ? "Add" : "Edit" }} Payment Option
+
+								br
+								.row
+									.col-lg
+										.card.bg-light
+											.card-header Setup Payment(s)
+											.card-body
+												.btn-group(role="group")
+													button.btn.btn-dark(type="button") One-Time
+													button.btn.btn-dark(type="button") Recurring
+							.col-lg-9
+								.card.bg-light
+									.card-header Payment(s)
+									.card-body
+										table.table.table-bordered
+											caption(style="caption-side:top;padding-top:0;") Last 5 Payments
+											thead
+												tr
+													th(scope="col") Date
+													th(scope="col") Payment Type
+													th(scope="col") Confirmation Code
+													th(scope="col") Amount
+											tbody
+												tr
+													td 2018-10-01
+													td Credit Card / Check / Cash
+													td AAABBB
+													td $1750.00
+												tr
+													td 2018-09-01
+													td Credit Card / Check / Cash
+													td AAABBB
+													td $1750.00
+												tr
+													td 2018-08-01
+													td Credit Card / Check / Cash
+													td AAABBB
+													td $1750.00
+												tr
+													td 2018-07-01
+													td Credit Card / Check / Cash
+													td AAABBB
+													td $1750.00
+												tr
+													td 2018-06-01
+													td Credit Card / Check / Cash
+													td AAABBB
+													td $1750.00
+										nav
+											ul.pagination
+												li.page-item
+													a.page-link(href="#") Previous
+												li.page-item
+													a.page-link(href="#") 1
+												li.page-item
+													a.page-link(href="#") 2
+												li.page-item
+													a.page-link(href="#") 3
+												li.page-item
+													a.page-link(href="#") Next
+					#grievance.tab-pane.fade(role="tabpanel" aria-labelledby="grievance-tab")
+						| Create Complaints
+						br
+						| Respond to Evictions
+						br
+					#documents.tab-pane.fade(role="tabpanel" aria-labelledby="documents-tab")
+						| Review / Sign / Cancel Lease
+		include partials/paymentoption_form.pug
+include partials/footer.pug

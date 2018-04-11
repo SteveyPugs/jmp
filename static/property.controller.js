@@ -1,5 +1,4 @@
 angular.module("Props", []).controller("PropertyController", function($scope, $http) {
-	// console.log($scope.properties)
 	$scope.getPropertyList = function(){
 		$http.get("/property").then(function(response){
 			$scope.properties = response.data;
