@@ -1,4 +1,5 @@
-angular.module("Props", []).controller("PropertyController", function($scope, $http) {
+var app = angular.module("Props", []);
+app.controller("PropertyController", function($scope, $http) {
 	$scope.getPropertyList = function(){
 		$http.get("/property").then(function(response){
 			$scope.properties = response.data;
@@ -67,7 +68,6 @@ angular.module("Props", []).controller("PropertyController", function($scope, $h
 			console.log(err);
 		});
 	};
-
 	$scope.addProperty = function(){
 		$http.post("/property", {
 			RegisterAddress: $scope.RegisterAddress,
@@ -85,6 +85,4 @@ angular.module("Props", []).controller("PropertyController", function($scope, $h
 			console.log(err);
 		});
 	};
-
-	
 });

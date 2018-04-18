@@ -53,7 +53,6 @@ router.post("/", function (req, res) {
 	}	
 });
 
-
 router.get("/contact/:PropertyID", function (req, res) {
 	if(lodash.isEmpty(req.cookies)){
 		res.send("Access Denied");

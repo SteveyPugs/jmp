@@ -1,0 +1,22 @@
+.modal.fade#Complaint(tabindex="-1" role="dialog" aria-hidden="true")
+	.modal-dialog.modal-lg
+		.modal-content
+			.modal-header
+				h5.modal-title Complaint
+				button.close(type="button" data-dismiss="modal" aria-label="Close")
+					span(aria-hidden="true") ×
+			.modal-body
+				form.was-validated#NewComplaint(name="NewComplaint" novalidate ng-submit="addNewComplaint()")
+					.row
+						.col-lg
+							label(for="GrievanceCategory") Category
+							select#GrievanceCategory.form-control.form-control-sm(required ng-model="selectedGrievanceCategory" ng-options='grievance_category as (grievance_category.GrievanceCategory) for grievance_category in grievance_categories')
+							.invalid-feedback Please select a category
+					br
+					.row
+						.col-lg
+							label(for="GrievanceMessage") Message
+							textarea#GrievanceMessage.form-control.form-control-sm(rows="3" required ng-model="GrievanceMessage")
+							.invalid-feedback Please enter a message
+					br
+					button.btn.btn-primary(ng-disabled="NewComplaint.$invalid" type="submit") Send

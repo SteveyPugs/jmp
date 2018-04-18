@@ -1,4 +1,4 @@
-.modal.fade#Payment(tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true")
+.modal.fade#PaymentOption(tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true")
 	.modal-dialog.modal-lg
 		.modal-content
 			.modal-header
@@ -16,27 +16,27 @@
 						.col-lg-4
 							.form-group
 								label.col-form-label(for="PaymentOptionCreditCardNumber") Card Number
-								input#PaymentOptionCreditCardNumber.form-control(type="text" required name="PaymentOptionCreditCardNumber" ng-model="PaymentOptionCreditCardNumber")
+								input#PaymentOptionCreditCardNumber.form-control(type="text" required name="PaymentOptionCreditCardNumber" ng-model="PaymentOptionCreditCardNumber" data-mask="999999999999999?9")
 								.invalid-feedback Please enter a credit card number
 						.col-lg-4
 							.form-group
 								label.col-form-label(for="PaymentOptionCreditCardExpiration") Expiration Date
-								input#PaymentOptionCreditCardExpiration.form-control(type="text" required name="PaymentOptionCreditCardExpiration" ng-model="PaymentOptionCreditCardExpiration")
+								input#PaymentOptionCreditCardExpiration.form-control(type="text" required name="PaymentOptionCreditCardExpiration" ng-model="PaymentOptionCreditCardExpiration" data-mask="99/99")
 								.invalid-feedback Please enter an expiration date
 						.col-lg-4
 							.form-group
 								label.col-form-label(for="PaymentOptionCreditCardCVV") CVV Number
-								input#PaymentOptionCreditCardCVV.form-control(type="text" required name="PaymentOptionCreditCardCVV" ng-model="PaymentOptionCreditCardCVV")
+								input#PaymentOptionCreditCardCVV.form-control(type="text" required name="PaymentOptionCreditCardCVV" ng-model="PaymentOptionCreditCardCVV" data-mask="999?9")
 								.invalid-feedback Please enter the cvv number
 					.row.d-none#Checking
 						.col-lg-6
 							.form-group
 								label.col-form-label(for="PaymentOptionCheckingRouting") Routing Number
-								input#PaymentOptionCheckingRouting.form-control(type="text" required name="PaymentOptionCheckingRouting" ng-model="PaymentOptionCheckingRouting")
+								input#PaymentOptionCheckingRouting.form-control(type="text" required name="PaymentOptionCheckingRouting" ng-model="PaymentOptionCheckingRouting" data-mask="999999999")
 								.invalid-feedback Please enter a routing number
 						.col-lg-6
 							.form-group
 								label.col-form-label(for="PaymentOptionCheckingAccount") Account Number
-								input#PaymentOptionCheckingAccount.form-control(type="text" required name="PaymentOptionCheckingAccount" ng-model="PaymentOptionCheckingAccount")
+								input#PaymentOptionCheckingAccount.form-control(type="text" required name="PaymentOptionCheckingAccount" ng-model="PaymentOptionCheckingAccount" data-mask="9999999999")
 								.invalid-feedback Please enter an account number
-					button.btn.btn-primary(ng-disabled="!((NewPaymentOption.PaymentOptionCreditCardNumber.$valid && NewPaymentOption.PaymentOptionCreditCardExpiration.$valid && NewPaymentOption.PaymentOptionCreditCardCVV.$valid) || (NewPaymentOption.PaymentOptionCheckingRouting.$valid && NewPaymentOption.PaymentOptionCheckingAccount.$valid))" type="submit") Add
+					button.btn.btn-primary(ng-disabled="!((NewPaymentOption.PaymentOptionCreditCardNumber.$valid && NewPaymentOption.PaymentOptionCreditCardExpiration.$valid && NewPaymentOption.PaymentOptionCreditCardCVV.$valid) || (NewPaymentOption.PaymentOptionCheckingRouting.$valid && NewPaymentOption.PaymentOptionCheckingAccount.$valid))" type="submit") {{ isObjectEmpty(paymentSetting) ? "Add" : "Edit" }}

@@ -3,20 +3,18 @@ include partials/nav_tenant.pug
 br
 .container-fluid(ng-app="Props" class="ng-cloak")
 	div(ng-controller="TenantController")
-
 		.card.text-center
 			.card-header
-				ul.nav.nav-tabs.card-header-tabs#TenantTabs(role="tablist")
+				ul.nav.nav-pills.card-header-pills#TenantTabs(role="tablist")
 					li.nav-item
-						a#payments-tab.nav-link.active(data-toggle="tab", href="#payments", role="tab", aria-controls="payments", aria-selected="true") Payments
+						a#payments-tab.nav-link(data-toggle="tab" href="#payments" role="tab" aria-controls="payments" aria-selected="false") Payments
 					li.nav-item
-						a#grievance-tab.nav-link(data-toggle="tab", href="#grievance", role="tab", aria-controls="grievance", aria-selected="false") File Grievance(s)
+						a#complaint-tab.nav-link.active(data-toggle="tab" href="#complaint" role="tab" aria-controls="complaint" aria-selected="true") Complaints
 					li.nav-item
-						a#documents-tab.nav-link(data-toggle="tab", href="#documents", role="tab", aria-controls="documents", aria-selected="false") Documents
+						a#documents-tab.nav-link(data-toggle="tab" href="#documents" role="tab" aria-controls="documents" aria-selected="false") Documents
 			.card-body.text-left
-				#TenantTabsContent.tab-content
-					#payments.tab-pane.fade.show.active(role="tabpanel", aria-labelledby="payments-tab")
-						br
+				.tab-content
+					#payments.tab-pane(role="tabpanel" aria-labelledby="payments-tab")
 						.row
 							.col-lg-3
 								.row
@@ -32,23 +30,22 @@ br
 												label(ng-if="paymentSetting.PaymentCheckAccount")
 													small ****{{paymentSetting.PaymentCheckAccount}}
 												br(ng-if="!isObjectEmpty(paymentSetting)")
-												button.btn.btn-primary.btn-sm(type="button" data-toggle="modal" data-target="#Payment" ng-value="D") {{ isObjectEmpty(paymentSetting) ? "Add" : "Edit" }} Payment Option
-
+												button.btn.btn-primary.btn-sm(type="button" data-toggle="modal" data-target="#PaymentOption") {{ isObjectEmpty(paymentSetting) ? "Add" : "Edit" }} Payment Option
 								br
 								.row
 									.col-lg
 										.card.bg-light
-											.card-header Setup Payment(s)
+											.card-header Make Payment(s)
 											.card-body
 												.btn-group(role="group")
-													button.btn.btn-dark(type="button") One-Time
-													button.btn.btn-dark(type="button") Recurring
+													button.btn.btn-dark(type="button" data-toggle="modal" data-target="#PaymentOne") One-Time
+													button.btn.btn-dark(type="button" disabled) Recurring
 							.col-lg-9
 								.card.bg-light
 									.card-header Payment(s)
 									.card-body
 										table.table.table-bordered
-											caption(style="caption-side:top;padding-top:0;") Last 5 Payments
+											caption(style="caption-side:top;padding-top:0;") Showing Payments {{ ((page - 1) * 5) + 1 }} to {{ (((page - 1) * 5) + 5) > paymentcount ? paymentcount : (((page - 1) * 5) + 5) }} of {{ paymentcount }}
 											thead
 												tr
 													th(scope="col") Date
@@ -56,49 +53,59 @@ br
 													th(scope="col") Confirmation Code
 													th(scope="col") Amount
 											tbody
-												tr
-													td 2018-10-01
-													td Credit Card / Check / Cash
-													td AAABBB
-													td $1750.00
-												tr
-													td 2018-09-01
-													td Credit Card / Check / Cash
-													td AAABBB
-													td $1750.00
-												tr
-													td 2018-08-01
-													td Credit Card / Check / Cash
-													td AAABBB
-													td $1750.00
-												tr
-													td 2018-07-01
-													td Credit Card / Check / Cash
-													td AAABBB
-													td $1750.00
-												tr
-													td 2018-06-01
-													td Credit Card / Check / Cash
-													td AAABBB
-													td $1750.00
+												tr(ng-repeat="payment in payments")
+													td {{ payment.createdAt | date:"yyyy-MM-dd hh:mm a" }}
+													td {{ payment.PaymentOption.PaymentTypeID ? (payment.PaymentOption.PaymentTypeID === 1 ? "Credit Card" : "Check" ) : "Cash" }}
+													td {{ payment.PaymentConfirmationCode }}
+													td {{ payment.PaymentAmount | currency : "$"}}
 										nav
 											ul.pagination
-												li.page-item
-													a.page-link(href="#") Previous
-												li.page-item
-													a.page-link(href="#") 1
-												li.page-item
-													a.page-link(href="#") 2
-												li.page-item
-													a.page-link(href="#") 3
-												li.page-item
-													a.page-link(href="#") Next
-					#grievance.tab-pane.fade(role="tabpanel" aria-labelledby="grievance-tab")
-						| Create Complaints
+												li(ng-class="page === 1 ? 'page-item disabled' : 'page-item'")
+													a.page-link(ng-click="go(-1)") Previous
+												li(ng-repeat="i in pageList(pageCount) track by $index" ng-class="page === $index + 1 ? 'page-item active' : 'page-item'")
+													a.page-link(ng-click="goTo($index + 1)") {{$index + 1}}
+												li(ng-class="page === pageCount ? 'page-item disabled' : 'page-item'")
+													a.page-link(ng-click="go(1)") Next
+					#complaint.tab-pane.show.active(role="tabpanel" aria-labelledby="complaint-tab")
+						button.btn.btn-dark.btn-sm(type="button" data-toggle="modal" data-target="#Complaint") New Complaint
 						br
-						| Respond to Evictions
 						br
-					#documents.tab-pane.fade(role="tabpanel" aria-labelledby="documents-tab")
-						| Review / Sign / Cancel Lease
+						#accordion.accordion(ng-repeat="grievance in grievances")
+							.card
+								.card-header
+									h5.mb-0
+										button.btn.btn-link(type="button" data-toggle="collapse" data-target="#C{{grievance.GrievanceID}}") Complaint {{grievance.GrievanceID}}
+								.collapse.show(data-parent="#accordion" id="C{{grievance.GrievanceID}}")
+									.card-body
+										.row
+											.col-lg
+												label.font-weight-bold Category
+												br
+												| {{grievance.GrievanceCategory.GrievanceCategory}}
+											.col-lg
+												label.font-weight-bold Open Date
+												br
+												| {{ grievance.createdAt | date :  "yyyy-MM-dd" }}
+											.col-lg
+												label.font-weight-bold Conclusion Date
+												br
+												| {{ GrievanceStatus ? (grievance.updatedAt | date :  "yyyy-MM-dd") : "-" }}
+										br
+										.row
+											.col-lg
+												label.font-weight-bold Thread&nbsp;
+													small Sorted from newest to oldest comments
+												hr
+												.form-group
+													label(for="NewMessage") New Message
+													textarea#NewMessage.form-control(rows="2")
+												span(ng-repeat="messsage in grievance.GrievanceMessages")
+													h6
+														span.badge.badge-dark {{messsage.GrievanceMessageSide ? "JMP Staff" : "Tenant"}} 
+													.alert.alert-dark(role="alert") {{messsage.GrievanceMessage}}
+					#documents.tab-pane(role="tabpanel" aria-labelledby="documents-tab")
+						div Review / Sign / Cancel Lease
 		include partials/paymentoption_form.pug
+		include partials/payment_one_form.pug
+		include partials/complaint.pug
 include partials/footer.pug

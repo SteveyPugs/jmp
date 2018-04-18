@@ -22,7 +22,6 @@ br
 			.col-lg-6
 				#accordion
 					.card(ng-repeat="selectUnit in selectUnits")
-						div 
 						div.card-header(id="unitHeading{{selectUnit.UnitID}}" style="background-color:{{selectUnit.UnitVacant ? '#26A65B' : '#D24D57'}}")
 							h5.mb-0
 								button.btn.btn-light.collapsed(data-toggle="collapse" data-target="#unitCollapse{{selectUnit.UnitID}}" aria-expanded="false" aria-controls="unitCollapse{{selectUnit.UnitID}}") Unit &num;{{selectUnit.UnitTag}}

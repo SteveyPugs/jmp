@@ -28,6 +28,21 @@ var models = [{
 },{
 	name: "PaymentOption",
 	file: "paymentoption"
+},{
+	name: "Payment",
+	file: "payment"
+},{
+	name: "GrievanceCategory",
+	file: "grievance_category"
+},{
+	name: "Admin",
+	file: "admin"
+},{
+	name: "Grievance",
+	file: "grievance"
+},{
+	name: "GrievanceMessage",
+	file: "grievance_message"
 }];
 
 models.forEach(function(model) {
@@ -85,10 +100,89 @@ sequelize.authenticate().then(function(err){
 				allowNull: false
 			}
 		});
+		model.PaymentOption.hasMany(model.Payment, {
+			foreignKey: {
+				name: "PaymentOptionID",
+				allowNull: true
+			}
+		});
+		model.Payment.belongsTo(model.PaymentOption, {
+			foreignKey: {
+				name: "PaymentOptionID",
+				allowNull: true
+			}
+		});
+		model.Tenant.hasMany(model.Payment, {
+			foreignKey: {
+				name: "TenantID",
+				allowNull: false
+			}
+		});
+		model.Payment.belongsTo(model.Tenant, {
+			foreignKey: {
+				name: "TenantID",
+				allowNull: false
+			}
+		});
+		model.Tenant.hasMany(model.Grievance, {
+			foreignKey: {
+				name: "TenantID",
+				allowNull: false
+			}
+		});
+		model.Grievance.belongsTo(model.Tenant, {
+			foreignKey: {
+				name: "TenantID",
+				allowNull: false
+			}
+		});
+		model.Admin.hasMany(model.Grievance, {
+			foreignKey: {
+				name: "AdminID",
+				allowNull: true
+			}
+		});
+		model.Grievance.belongsTo(model.Admin, {
+			foreignKey: {
+				name: "TenantID",
+				allowNull: true
+			}
+		});
+		model.Grievance.belongsTo(model.GrievanceCategory, {
+			foreignKey: {
+				name: "GrievanceCategoryID",
+				allowNull: false
+			}
+		});
+		model.Grievance.hasMany(model.GrievanceMessage, {
+			foreignKey: {
+				name: "GrievanceID",
+				allowNull: false
+			}
+		});
 		sequelize.sync({
 			force: false
 		}).then(function(){
-			console.log("sync complete");
+			model.GrievanceCategory.count({
+				where:{
+					deletedAt: null
+				}
+			}).then(function(categories){
+				if(categories < 1){
+					model.GrievanceCategory.bulkCreate([{
+						GrievanceCategory: "Repair"
+					},{
+						GrievanceCategory: "Tenant Related"
+					}]).then(function(created){
+						console.log("sync complete");
+					});
+				}
+				else{
+					console.log("sync complete");
+				}
+			}).catch(function(err){
+				console.log(err);
+			});
 		}).catch(function(err){
 			console.log(err);
 		});
