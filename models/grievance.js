@@ -9,9 +9,14 @@ module.exports = function(sequelize, DataTypes){
 		GrievanceStatus: {
 			type: DataTypes.BOOLEAN,
 			allowNull: false
+		},
+		GrievanceCode: {
+			type: DataTypes.UUID,
+			allowNull: false,
+			defaultValue: DataTypes.UUIDV4
 		}
 	},{
-		paranoid: true
+		paranoid: false
 	});
 	return Grievance;
 };

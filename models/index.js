@@ -4,7 +4,7 @@ var sequelize = new Sequelize(config.database.database, config.database.user, co
 	host: config.database.host,
 	dialect: "mysql",
 	logging: false,
-	operatorsAliases: false
+	operatorsAliases: true
 });
 
 var models = [{

@@ -3,35 +3,6 @@ var lodash = require("lodash");
 var router = express.Router();
 var models = require("../models");
 
-router.get("/", function (req, res) {
-	if(lodash.isEmpty(req.cookies)){
-		res.send("Access Denied");
-	}
-	else{
-		models.Grievance.findAll({
-			where:{
-				deletedAt: null,
-				TenantID: req.cookies.TenantID
-			},
-			attributes: ["GrievanceID", "GrievanceStatus", "createdAt", "updatedAt"],
-			include:[{
-				model: models.GrievanceCategory,
-				attributes: ["GrievanceCategory"]
-			},{
-				model: models.GrievanceMessage,
-				attributes: ["GrievanceMessage", "GrievanceMessageSide"]
-			}],
-			order: [[{
-				model: models.GrievanceMessage
-			}, "createdAt", "DESC"]]
-		}).then(function(grievances){
-			res.send(grievances)
-		}).catch(function(err){
-			res.send(err.stack);
-		});
-	}
-});
-
 router.post("/", function (req, res) {
 	if(lodash.isEmpty(req.cookies)){
 		res.send("Access Denied");
@@ -57,6 +28,42 @@ router.post("/", function (req, res) {
 	}
 });
 
+router.delete("/:GrievanceID", function (req, res) {
+	if(lodash.isEmpty(req.cookies)){
+		res.send("Access Denied");
+	}
+	else{
+		models.Grievance.update({
+			GrievanceStatus: true
+		},{
+			where:{
+				GrievanceID: req.params.GrievanceID
+			}
+		}).then(function(updated_record){
+			res.send(true);
+		}).catch(function(err){
+			res.send(err.stack);
+		});
+	}
+});
+
+router.post("/message/:side", function (req, res) {
+	if(lodash.isEmpty(req.cookies)){
+		res.send("Access Denied");
+	}
+	else{
+		models.GrievanceMessage.create({
+			GrievanceMessage: req.body.GrievanceMessage,
+			GrievanceMessageSide: req.params.side === "tenant" ? false : true,
+			GrievanceID: req.body.GrievanceID 
+		}).then(function(new_message){
+			res.send(true);
+		}).catch(function(err){
+			res.send(err.stack);
+		});
+	}
+});
+
 router.get("/categories", function (req, res) {
 	if(lodash.isEmpty(req.cookies)){
 		res.send("Access Denied");
@@ -70,6 +77,61 @@ router.get("/categories", function (req, res) {
 			attributes: ["GrievanceCategory", "GrievanceCategoryID"]
 		}).then(function(grievancecategories){
 			res.send(grievancecategories)
+		}).catch(function(err){
+			res.send(err.stack);
+		});
+	}
+});
+
+router.get("/:status", function (req, res) {
+	if(lodash.isEmpty(req.cookies)){
+		res.send("Access Denied");
+	}
+	else{
+		models.Grievance.findAndCountAll({
+			where:{
+				deletedAt: null,
+				TenantID: req.cookies.TenantID,
+				GrievanceStatus: (req.params.status === "open" ? false : true)
+			},
+			attributes: ["GrievanceID", "createdAt", "updatedAt", "GrievanceCode"],
+			include:[{
+				model: models.GrievanceCategory,
+				attributes: ["GrievanceCategory"]
+			}],
+		}).then(function(grievances){
+			res.send(grievances)
+		}).catch(function(err){
+			res.send(err.stack);
+		});
+	}
+});
+
+router.get("/messages/:id", function (req, res) {
+	if(lodash.isEmpty(req.cookies)){
+		res.send("Access Denied");
+	}
+	else{
+		var grievance = {}
+		models.Grievance.find({
+			where:{
+				GrievanceID: req.params.id
+			},
+			raw: true
+		}).then(function(grievance){
+			models.GrievanceMessage.findAll({
+				where:{
+					deletedAt: null,
+					GrievanceID: req.params.id
+				},
+				raw: true, 
+				order: [["createdAt", "DESC"]]
+			}).then(function(messages){
+				grievance.messages = messages
+				res.send(grievance)
+			}).catch(function(err){
+				res.send(err.stack);
+			});
 		}).catch(function(err){
 			res.send(err.stack);
 		});

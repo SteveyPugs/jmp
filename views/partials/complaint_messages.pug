@@ -1,0 +1,5 @@
+.row(ng-repeat="messsage in GrievanceMessages.messages")
+	.col-lg
+		h6
+			span.badge.badge-dark {{messsage.GrievanceMessageSide ? "JMP Staff" : "Tenant"}} 
+		.alert.alert-dark(role="alert") {{messsage.GrievanceMessage}}

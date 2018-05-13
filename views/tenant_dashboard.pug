@@ -70,42 +70,78 @@ br
 						button.btn.btn-dark.btn-sm(type="button" data-toggle="modal" data-target="#Complaint") New Complaint
 						br
 						br
-						#accordion.accordion(ng-repeat="grievance in grievances")
-							.card
-								.card-header
-									h5.mb-0
-										button.btn.btn-link(type="button" data-toggle="collapse" data-target="#C{{grievance.GrievanceID}}") Complaint {{grievance.GrievanceID}}
-								.collapse.show(data-parent="#accordion" id="C{{grievance.GrievanceID}}")
-									.card-body
-										.row
-											.col-lg
-												label.font-weight-bold Category
-												br
-												| {{grievance.GrievanceCategory.GrievanceCategory}}
-											.col-lg
-												label.font-weight-bold Open Date
-												br
-												| {{ grievance.createdAt | date :  "yyyy-MM-dd" }}
-											.col-lg
-												label.font-weight-bold Conclusion Date
-												br
-												| {{ GrievanceStatus ? (grievance.updatedAt | date :  "yyyy-MM-dd") : "-" }}
-										br
-										.row
-											.col-lg
-												label.font-weight-bold Thread&nbsp;
-													small Sorted from newest to oldest comments
-												hr
-												.form-group
-													label(for="NewMessage") New Message
-													textarea#NewMessage.form-control(rows="2")
-												span(ng-repeat="messsage in grievance.GrievanceMessages")
-													h6
-														span.badge.badge-dark {{messsage.GrievanceMessageSide ? "JMP Staff" : "Tenant"}} 
-													.alert.alert-dark(role="alert") {{messsage.GrievanceMessage}}
+						.card.text-center
+							.card-header
+								ul.nav.nav-tabs.card-header-tabs#ComplaintTabs(role="tablist")
+									li.nav-item
+										a#opencomplaints-tab.nav-link.active(data-toggle="tab" href="#opencomplaints" role="tab" aria-controls="opencomplaints" aria-selected="true") Open&nbsp;
+											span.badge.badge-dark {{grievances_open_count}}
+
+									li.nav-item
+										a#closedcomplaints-tab.nav-link(data-toggle="tab" href="#closedcomplaints" role="tab" aria-controls="closedcomplaints" aria-selected="false") Closed
+									li.nav-item
+							.card-body.text-left
+								#complaints.tab-content
+									#opencomplaints.tab-pane.active(role="tabpanel" aria-labelledby="opencomplaints-tab")
+										.alert.alert-dark(role="alert" ng-repeat="grievance in grievances_open")
+											.row
+												.col-lg-4
+													label.font-weight-bold Code
+													br
+													| {{grievance.GrievanceCode}}
+												.col-lg-3
+													label.font-weight-bold Category
+													br
+													| {{grievance.GrievanceCategory.GrievanceCategory}}
+												.col-lg-2
+													label.font-weight-bold Open Date
+													br
+													| {{ grievance.createdAt | date :  "yyyy-MM-dd" }}
+												.col-lg-3
+													.btn-group.btn-group-vertical.float-right(role='group', aria-label='Basic example')
+														button.btn.btn-dark.btn-sm(type='button' data-toggle="modal" data-target="#ComplaintThread" data-greivanceid="{{grievance.GrievanceID}}") View Thread
+														button.btn.btn-danger.btn-sm(type='button' ng-click="closeGreivance(grievance.GrievanceID)") Close
+									#closedcomplaints.tab-pane.show(role="tabpanel" aria-labelledby="closedcomplaints-tab")
+										.alert.alert-dark(role="alert" ng-repeat="grievance in grievances_closed")
+											.row
+												.col-lg-4
+													label.font-weight-bold Code
+													br
+													| {{grievance.GrievanceCode}}
+												.col-lg-2
+													label.font-weight-bold Category
+													br
+													| {{grievance.GrievanceCategory.GrievanceCategory}}
+												.col-lg-2
+													label.font-weight-bold Open Date
+													br
+													| {{ grievance.createdAt | date :  "yyyy-MM-dd" }}
+												.col-lg-2
+													label.font-weight-bold Conclusion Date
+													br
+													| {{ grievance.updatedAt | date :  "yyyy-MM-dd" }}
+												.col-lg-2
+													.btn-group.btn-group-vertical.float-right(role='group', aria-label='Basic example')
+														button.btn.btn-dark.btn-sm(type='button' data-toggle="modal" data-target="#ComplaintThread" data-greivanceid="{{grievance.GrievanceID}}") View Thread
 					#documents.tab-pane(role="tabpanel" aria-labelledby="documents-tab")
-						div Review / Sign / Cancel Lease
+						table.table.table-bordered
+							thead
+								tr
+									th Document Name
+									th Upload Date
+									th Download
+							tbody
+								tr
+									td Lease_2018.pdf
+									td 2018-01-01
+									td Link
+								tr
+									td Lease_2017.pdf
+									td 2017-01-01
+									td Link
 		include partials/paymentoption_form.pug
 		include partials/payment_one_form.pug
 		include partials/complaint.pug
+		include partials/complaint_new_message.pug
 include partials/footer.pug
+//- div Review / Sign / Cancel Lease

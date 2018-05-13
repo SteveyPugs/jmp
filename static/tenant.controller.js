@@ -17,8 +17,22 @@ app.controller("TenantController", function($scope, $http) {
 	};
 	$scope.getPaymentInformation();
 	$scope.getGrievances = function(){
-		$http.get("/grievance").then(function(response){
-			$scope.grievances = response.data;
+		$http.get("/grievance/open").then(function(response){
+			$scope.grievances_open = response.data.rows;
+			$scope.grievances_open_count = response.data.count;
+		}, function(err){
+			console.log(err);
+		});
+		$http.get("/grievance/closed").then(function(response){
+			$scope.grievances_closed = response.data.rows;
+		}, function(err){
+			console.log(err);
+		});
+	};
+	$scope.getMessages = function(id){
+		$http.get("/grievance/messages/" + id).then(function(response){
+			$scope.GrievanceMessages = response.data;
+			$("#NewComplaintMessage").get(0).reset();
 		}, function(err){
 			console.log(err);
 		});
@@ -60,7 +74,11 @@ app.controller("TenantController", function($scope, $http) {
 			console.log(err);
 		});
 	});
-	
+	$("#ComplaintThread").on("show.bs.modal", function (e) {
+		$scope.GrievanceMessage = null;
+		$scope.GrievanceID = $(e.relatedTarget).data("greivanceid");
+		$scope.getMessages($(e.relatedTarget).data("greivanceid"));
+	});
 	$scope.choosePaymentType = function(value){
 		$("#NewPaymentOption").get(0).reset();
 		if(value === "CC"){
@@ -111,6 +129,28 @@ app.controller("TenantController", function($scope, $http) {
 			if(response){
 				$("#NewComplaint").get(0).reset();
 				$("#Complaint").modal("hide");
+			}
+		}, function(err){
+			console.log(err);
+		});
+	};
+	$scope.addNewComplaintMessage = function(){
+		$http.post("/grievance/message/tenant", {
+			GrievanceID: $scope.GrievanceID,
+			GrievanceMessage: $scope.GrievanceMessage
+		}).then(function(response){
+			if(response){
+				$scope.getMessages($scope.GrievanceID);
+				$("#NewComplaintMessage").get(0).reset();
+			}
+		}, function(err){
+			console.log(err);
+		});
+	};
+	$scope.closeGreivance = function(greivanceid){
+		$http.delete("/grievance/" + greivanceid).then(function(response){
+			if(response){
+				$scope.getGrievances();
 			}
 		}, function(err){
 			console.log(err);
