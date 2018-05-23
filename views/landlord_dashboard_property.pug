@@ -7,19 +7,26 @@ br
 			.col
 				label(for="PropertySelect") Select a Property
 				button.btn.btn-link.btn-sm(type="button" data-toggle="modal" data-target="#Property" data-landlord="x") Add New Property
-				select#PropertySelect.form-control.form-control-sm(ng-change="getPropertyInformation()" ng-model="selectedProperty" ng-options='property as (property.PropertyAddress + ", " + property.PropertyCity + ", " + property.PropertyState + " " + property.PropertyZip) for property in properties')
+				select#PropertySelect.form-control.form-control-sm(ng-change="getPropertyInformation()" ng-model="selectedProperty" ng-options='property as (property.PropertyAddress + ", " + property.PropertyCity + ", " + property.PropertyState + " " + property.PropertyZip + " (" + property.PropertyResidentialType + ")") for property in properties')
 		br
 		.row(ng-if="selectedProperty")
 			.col-lg-3
 				.card
 					.card-body
 						h5.card-title Menu
+						hr
 						ul.list-unstyled
 							li
 								a.btn.btn-link(href="#" style="font-size:13px;" role="button" data-toggle="modal" data-target="#EmergencyContact" data-property="{{selectedProperty.PropertyID}}") Add Emergency Contact
 							li
 								a.btn.btn-link(href="#" style="font-size:13px;" role="button") Add Lease
-			.col-lg-6
+						br
+						h5.card-title Emergency Contacts
+						hr
+						address(ng-repeat="contact in contacts")
+							i
+								small {{contact.PropertyContactName}} ({{contact.PropertyContactTelephone}})
+			.col-lg-9
 				#accordion
 					.card(ng-repeat="selectUnit in selectUnits")
 						div.card-header(id="unitHeading{{selectUnit.UnitID}}" style="background-color:{{selectUnit.UnitVacant ? '#26A65B' : '#D24D57'}}")
@@ -43,24 +50,14 @@ br
 								br
 								.row
 									.col-lg(ng-if="selectUnit.UnitTenants.Tenant.TenantID")
-										label.font-weight-bold Functions
-										br
 										.btn-group.btn-group-sm(role="group")
-											button.btn.btn-light(type="button") Payments
-											button.btn.btn-light(type="button") Repairs / Maintenance
-											button.btn.btn-light(type="button") Complaints
-											button.btn.btn-light(type="button") Evict
-			.col-lg-3
-				.card
-					.card-body
-						h5.card-title Emergency Contacts
-
-						address(ng-repeat="contact in contacts")
-							i {{contact.PropertyContactName}}
-							br
-							| {{contact.PropertyContactTelephone}}
+											button.btn.btn-light(type="button" data-toggle="modal" data-target="#TenantPayment" data-tenant="{{selectUnit.UnitTenants.Tenant.TenantID}}" data-unit="{{selectUnit.UnitID}}") Payments
+											button.btn.btn-light(type="button" data-toggle="modal" data-target="#TenantComplaint" data-tenant="{{selectUnit.UnitTenants.Tenant.TenantID}}" data-unit="{{selectUnit.UnitID}}") Complaints
+											button.btn.btn-light(type="button" ng-click="evictTenant(selectUnit.UnitTenants.Tenant.TenantID, selectUnit.UnitID)") Evict
 		include partials/tenant_form.pug
 		include partials/tenant_form_finish.pug
 		include partials/property_emergency_contact.pug
 		include partials/property_form.pug
+		include partials/tenant_payment.pug
+		include partials/tenant_complaint.pug
 include partials/footer.pug

@@ -37,3 +37,15 @@ $(".typeahead").typeahead({
 	name: "states",
 	source: substringMatcher(["AK", "AL", "AR", "AZ", "CA", "CO", "CT", "DC", "DE", "FL", "GA", "HI", "IA", "ID", "IL", "IN", "KS", "KY", "LA", "MA", "MD", "ME", "MI", "MN", "MO", "MS", "MT", "NC", "ND", "NE", "NH", "NJ", "NM", "NV", "NY", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VA", "VT", "WA", "WI", "WV", "WY"])
 });
+
+
+function showExtraResidential(){
+	if(document.getElementById("RegisterTypeResidential").checked){
+		document.getElementById("ResidentialType").style.display = "block";
+		document.getElementById("ResidentialTypeSelect").required = true;
+	}
+	else{
+		document.getElementById("ResidentialType").style.display = "none";
+		document.getElementById("ResidentialTypeSelect").required = false;
+	}
+}

@@ -33,7 +33,8 @@ router.post("/", function (req, res) {
 			PropertyState: req.body.RegisterState,
 			PropertyUnitCount: req.body.RegisterNumberOfUnits,
 			PropertyType: req.body.RegisterTypeOptions,
-			LandlordID: req.cookies.LandLordID
+			LandlordID: req.cookies.LandLordID,
+			PropertyResidentialType: req.body.ResidentialType
 		}).then(function(property){
 			var units = [];
 			lodash.times(req.body.RegisterNumberOfUnits, function(v){

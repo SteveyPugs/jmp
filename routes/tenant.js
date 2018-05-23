@@ -1,5 +1,6 @@
 var express = require("express");
 var lodash = require("lodash");
+var moment = require("moment");
 var bcrypt = require("bcrypt");
 var Chance = require("chance");
 var models = require("../models");
@@ -34,6 +35,36 @@ router.post("/", function (req, res) {
 				}).catch(function(err){
 					res.send(err);
 				});
+			}).catch(function(err){
+				res.send(err);
+			});
+		}).catch(function(err){
+			res.send(err);
+		});
+	}
+});
+
+router.post("/evict", function (req, res) {
+	if(lodash.isEmpty(req.cookies)){
+		res.send("Access Denied");
+	}
+	else{
+		models.UnitTenant.update({
+			deletedAt: moment().format("YYYY-MM-DD HH:mm:ss")
+		}, {
+			where:{
+				UnitID: req.body.UnitID,
+				TenantID: req.body.TenantID
+			}
+		}).then(function(unit_tenant){
+			models.Unit.update({
+				UnitVacant: true
+			},{
+				where:{
+					UnitID: req.body.UnitID
+				}
+			}).then(function(unit){
+				return res.send(true);
 			}).catch(function(err){
 				res.send(err);
 			});

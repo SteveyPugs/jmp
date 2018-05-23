@@ -29,6 +29,10 @@ module.exports = function(sequelize, DataTypes){
 		PropertyType: {
 			type: DataTypes.INTEGER,
 			allowNull: false
+		},
+		PropertyResidentialType: {
+			type: DataTypes.STRING,
+			allowNull: true
 		}
 	},{
 		paranoid: true

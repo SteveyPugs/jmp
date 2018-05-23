@@ -1,0 +1,21 @@
+.modal.fade#TenantPayment(tabindex="-1" role="dialog" aria-hidden="true")
+	.modal-dialog.modal-lg
+		.modal-content
+			.modal-header
+				h5.modal-title Payments &nbsp;
+					small Unit &num;{{UnitID}}
+				button.close(type="button" data-dismiss="modal" aria-label="Close")
+					span(aria-hidden="true") ×
+			.modal-body
+				table.table.table-bordered
+					caption(style="caption-side:top;padding-top:0;") Last 5 Payments
+					thead
+						tr
+							th(scope="col") Date
+							th(scope="col") Payment Type
+							th(scope="col") Amount
+					tbody
+						tr(ng-repeat="payment in payments")
+							td {{ payment.createdAt | date:"yyyy-MM-dd hh:mm a" }}
+							td {{ payment.PaymentOption.PaymentTypeID ? (payment.PaymentOption.PaymentTypeID === 1 ? "Credit Card" : "Check" ) : "Cash" }}
+							td {{ payment.PaymentAmount | currency : "$"}}

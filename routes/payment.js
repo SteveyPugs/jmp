@@ -29,7 +29,34 @@ router.get("/", function(req, res) {
 		}).then(function(payments){
 			res.send(payments);
 		}).catch(function(err){
-			console.log(err)
+			res.send(err);
+		});
+	}
+});
+
+router.get("/tenant/:TenantID", function(req, res) {
+	if(lodash.isEmpty(req.cookies)){
+		res.send("Access Denied");
+	}
+	else{
+		models.Payment.findAll({
+			where:{
+				TenantID: req.params.TenantID,
+				deletedAt: null
+			},
+			include: [{
+				model: models.PaymentOption,
+				paranoid: false,
+				attributes: ["PaymentTypeID"]
+			}],
+			limit: 5,
+			raw: true,
+			nest: true,
+			order: [["createdAt", "DESC"]],
+			attributes:["PaymentAmount", "createdAt"]
+		}).then(function(payments){
+			res.send(payments);
+		}).catch(function(err){
 			res.send(err);
 		});
 	}

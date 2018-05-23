@@ -43,5 +43,13 @@
 								label.form-check-label(for="RegisterTypeCommerical") Commercial
 								br
 								.invalid-feedback Please choose a property type
+					br(ng-hide="RegisterTypeOptions == 2 || !RegisterTypeOptions")
+					.row(ng-hide="RegisterTypeOptions == 2 || !RegisterTypeOptions")
+						.col
+							label Residential Type
+							br
+							select.form-control.form-control-sm(ng-model="selectedResidentialType" ng-required="RegisterTypeOptions == 1" name="ResidentialType" ng-options="ResidentialType.key as ResidentialType.key group by ResidentialType.group for ResidentialType in ResidentialTypes")
+								option(value="")
+							.invalid-feedback Please choose a sub type
 					br
 					button.btn.btn-primary(ng-disabled="NewProperty.$invalid" type="submit") Add

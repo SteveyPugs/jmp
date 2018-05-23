@@ -16,7 +16,7 @@ module.exports = function(sequelize, DataTypes){
 			defaultValue: DataTypes.UUIDV4
 		}
 	},{
-		paranoid: false
+		paranoid: true
 	});
 	return Grievance;
 };

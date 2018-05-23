@@ -83,6 +83,29 @@ router.get("/categories", function (req, res) {
 	}
 });
 
+router.get("/tenant/:TenantID", function (req, res) {
+	if(lodash.isEmpty(req.cookies)){
+		res.send("Access Denied");
+	}
+	else{
+		models.Grievance.findAll({
+			where:{
+				deletedAt: null,
+				TenantID: req.params.TenantID
+			},
+			attributes: ["GrievanceID", "createdAt", "updatedAt", "AdminID", "GrievanceStatus"],
+			include:[{
+				model: models.GrievanceCategory,
+				attributes: ["GrievanceCategory"]
+			}],
+		}).then(function(grievances){
+			res.send(grievances)
+		}).catch(function(err){
+			res.send(err.stack);
+		});
+	}
+});
+
 router.get("/:status", function (req, res) {
 	if(lodash.isEmpty(req.cookies)){
 		res.send("Access Denied");
