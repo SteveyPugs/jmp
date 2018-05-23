@@ -74,4 +74,33 @@ router.post("/evict", function (req, res) {
 	}
 });
 
+router.get("/unit/property", function (req, res) {
+	if(lodash.isEmpty(req.cookies)){
+		res.send("Access Denied");
+	}
+	else{
+		models.UnitTenant.find({
+			where:{
+				TenantID: req.cookies.TenantID
+			},
+			attributes: ["UnitID"],
+			raw: true
+		}).then(function(unittenant){
+			models.Unit.find({
+				where:{
+					UnitID: unittenant.UnitID
+				},
+				attributes: ["PropertyID"],
+				raw: true
+			}).then(function(unit){
+				res.send(unit);
+			}).catch(function(err){
+				res.send(err);
+			});
+		}).catch(function(err){
+			res.send(err);
+		});
+	}
+});
+
 module.exports = router;

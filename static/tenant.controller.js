@@ -14,6 +14,15 @@ app.controller("TenantController", function($scope, $http) {
 		}, function(err){
 			console.log(err);
 		});
+		$http.get("/tenant/unit/property").then(function(response){
+			$http.get("/property/contact/" + response.data.PropertyID).then(function(response){
+				$scope.contacts = response.data;
+			}, function(err){
+				console.log(err);
+			});
+		}, function(err){
+			console.log(err);
+		});
 	};
 	$scope.getPaymentInformation();
 	$scope.getGrievances = function(){

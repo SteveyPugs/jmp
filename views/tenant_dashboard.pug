@@ -7,14 +7,16 @@ br
 			.card-header
 				ul.nav.nav-pills.card-header-pills#TenantTabs(role="tablist")
 					li.nav-item
-						a#payments-tab.nav-link(data-toggle="tab" href="#payments" role="tab" aria-controls="payments" aria-selected="false") Payments
+						a#payments-tab.nav-link.active(data-toggle="tab" href="#payments" role="tab" aria-controls="payments" aria-selected="true") Payments
 					li.nav-item
-						a#complaint-tab.nav-link.active(data-toggle="tab" href="#complaint" role="tab" aria-controls="complaint" aria-selected="true") Complaints
+						a#complaint-tab.nav-link(data-toggle="tab" href="#complaint" role="tab" aria-controls="complaint" aria-selected="false") Complaints
 					li.nav-item
 						a#documents-tab.nav-link(data-toggle="tab" href="#documents" role="tab" aria-controls="documents" aria-selected="false") Documents
+					li.nav-item
+						a#contacts-tab.nav-link(data-toggle="tab" href="#contacts" role="tab" aria-controls="contacts" aria-selected="false") Contacts
 			.card-body.text-left
 				.tab-content
-					#payments.tab-pane(role="tabpanel" aria-labelledby="payments-tab")
+					#payments.tab-pane.show.active(role="tabpanel" aria-labelledby="payments-tab")
 						.row
 							.col-lg-3
 								.row
@@ -66,7 +68,7 @@ br
 													a.page-link(ng-click="goTo($index + 1)") {{$index + 1}}
 												li(ng-class="page === pageCount ? 'page-item disabled' : 'page-item'")
 													a.page-link(ng-click="go(1)") Next
-					#complaint.tab-pane.show.active(role="tabpanel" aria-labelledby="complaint-tab")
+					#complaint.tab-pane(role="tabpanel" aria-labelledby="complaint-tab")
 						button.btn.btn-dark.btn-sm(type="button" data-toggle="modal" data-target="#Complaint") New Complaint
 						br
 						br
@@ -139,6 +141,13 @@ br
 									td Lease_2017.pdf
 									td 2017-01-01
 									td Link
+					#contacts.tab-pane(role="tabpanel" aria-labelledby="contacts-tab")
+						.row
+							.col-lg(ng-repeat="contact in contacts")
+								address
+									strong {{contact.PropertyContactName}}
+									br
+									| {{contact.PropertyContactTelephone}}
 		include partials/paymentoption_form.pug
 		include partials/payment_one_form.pug
 		include partials/complaint.pug

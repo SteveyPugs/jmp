@@ -1,4 +1,4 @@
-app.controller("TenantDashController", function($scope, $http) {
+app.controller("PropertyDashController", function($scope, $http) {
 	$scope.date = new Date();
 	$http.get("/graph/units").then(function(response){
 		new Chart($("#UnitChart")[0].getContext("2d"), {
