@@ -34,4 +34,27 @@ router.get("/dashboard/landlord/property", function (req, res) {
 	}
 });
 
+router.get("/support", function (req, res) {
+	if(lodash.isEmpty(req.cookies)){
+		res.render("support", { title: "Support",
+			Landlord: false,
+			Tenant: false
+		});
+	}
+	else{
+		if(req.cookies.TenantID){
+			res.render("support", { title: "Support",
+				Landlord: false,
+				Tenant: true
+			});
+		}
+		else{
+			res.render("support", { title: "Support",
+				Landlord: true,
+				Tenant: false
+			});
+		}
+	}	
+});
+
 module.exports = router;
