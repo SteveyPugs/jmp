@@ -19,3 +19,5 @@
 							td {{ payment.createdAt | date:"yyyy-MM-dd hh:mm a" }}
 							td {{ payment.PaymentOption.PaymentTypeID ? (payment.PaymentOption.PaymentTypeID === 1 ? "Credit Card" : "Check" ) : "Cash" }}
 							td {{ payment.PaymentAmount | currency : "$"}}
+						tr(ng-if="payments.length === 0")
+							td(colspan="3" align="center") No Payments

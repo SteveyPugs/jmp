@@ -23,3 +23,5 @@
 							td {{ complaint.createdAt | date:"yyyy-MM-dd" }}
 							td {{ complaint.GrievanceStatus ? (complaint.updatedAt | date:"yyyy-MM-dd") : "-"  }}
 							td {{ complaint.AdminID ? complaint.AdminID : "-" }}
+						tr(ng-if="complaints.length === 0")
+							td(colspan="5" align="center") No Payments
