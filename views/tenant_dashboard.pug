@@ -24,8 +24,8 @@ br
 										.card.bg-light
 											.card-header Payment Options
 											.card-body
-												span.badge.badge-info(ng-if="paymentSetting.PaymentCCNumber") Credit Card
-												span.badge.badge-info(ng-if="paymentSetting.PaymentCheckAccount") Checking Account
+												span.badge.badge-info(ng-if="paymentSetting.PaymentCCNumber") Credit
+												span.badge.badge-info(ng-if="paymentSetting.PaymentCheckAccount") Checking
 												br(ng-if="!isObjectEmpty(paymentSetting)")
 												label(ng-if="paymentSetting.PaymentCCNumber")
 													small ****{{paymentSetting.PaymentCCNumber}}

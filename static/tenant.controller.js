@@ -65,7 +65,8 @@ app.controller("TenantController", function($scope, $http) {
 		else return true;
 	};
 	$("#PaymentOption").on("show.bs.modal", function (e) {
-		$("#NewPaymentOption").get(0).reset();
+		$("#NewPaymentOptionCredit").get(0).reset();
+		$("#NewPaymentOptionCheck").get(0).reset();
 	});
 	$("#Complaint").on("show.bs.modal", function (e) {
 		$("#NewComplaint").get(0).reset();
@@ -88,28 +89,24 @@ app.controller("TenantController", function($scope, $http) {
 		$scope.GrievanceID = $(e.relatedTarget).data("greivanceid");
 		$scope.getMessages($(e.relatedTarget).data("greivanceid"));
 	});
-	$scope.choosePaymentType = function(value){
-		$("#NewPaymentOption").get(0).reset();
-		if(value === "CC"){
-			$("#CC").removeClass("d-none");
-			$("#Checking").addClass("d-none");
-		}
-		else{
-			$("#Checking").removeClass("d-none");
-			$("#CC").addClass("d-none");
-		}
-	};
 	$scope.addPaymentOption = function(){
 		$http.post("/payment/option", {
 			PaymentOptionCreditCardNumber: $scope.PaymentOptionCreditCardNumber,
-			PaymentOptionCreditCardExpiration: $scope.PaymentOptionCreditCardExpiration,
-			PaymentOptionCreditCardCVV: $scope.PaymentOptionCreditCardCVV,
+			PaymentOptionCreditCardExpiration: $scope.PaymentOptionCreditCardExpirationMonth ? $scope.PaymentOptionCreditCardExpirationMonth + "/" + $scope.PaymentOptionCreditCardExpirationYear : null,
+			PaymentOptionCreditCardCVV: $scope.PaymentOptionCreditCardCV,
 			PaymentOptionCheckingRouting: $scope.PaymentOptionCheckingRouting,
 			PaymentOptionCheckingAccount: $scope.PaymentOptionCheckingAccount
 		}).then(function(response){
 			if(response){
-				$("#NewPaymentOption").get(0).reset();
-				$("#Payment").modal("hide");
+				$scope.PaymentOptionCreditCardNumber = null;
+				$scope.PaymentOptionCreditCardExpirationMonth = null;
+				$scope.PaymentOptionCreditCardExpirationYear = null;
+				$scope.PaymentOptionCreditCardCV = null;
+				$scope.PaymentOptionCheckingRouting = null;
+				$scope.PaymentOptionCheckingAccount = null;
+				$("#NewPaymentOptionCredit").get(0).reset();
+				$("#NewPaymentOptionCheck").get(0).reset();
+				$("#PaymentOption").modal("hide");
 				$scope.getPaymentInformation();
 			}
 		}, function(err){
@@ -165,4 +162,18 @@ app.controller("TenantController", function($scope, $http) {
 			console.log(err);
 		});
 	};
+	$("#PaymentTypeTabs").on("click", function (e) {
+		if(e.target.id === "check-tab"){
+			$scope.PaymentOptionCreditCardNumber = null;
+			$scope.PaymentOptionCreditCardExpirationMonth = null;
+			$scope.PaymentOptionCreditCardExpirationYear = null;
+			$scope.PaymentOptionCreditCardCV = null;
+			$("#NewPaymentOptionCredit").get(0).reset();	
+		}
+		else{
+			$scope.PaymentOptionCheckingRouting = null;
+			$scope.PaymentOptionCheckingAccount = null;
+			$("#NewPaymentOptionCheck").get(0).reset();
+		}
+	});
 });
