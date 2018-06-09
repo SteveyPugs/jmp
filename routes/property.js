@@ -101,7 +101,7 @@ router.get("/lease/:PropertyID", function (req, res) {
 				PropertyID: req.params.PropertyID
 			}
 		}).then(function(lease){
-			res.send(lease.LeaseTemplate);
+			res.send(lease ? lease.LeaseTemplate : null);
 		}).catch(function(err){
 			res.send(err);
 		});		
