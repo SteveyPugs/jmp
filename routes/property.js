@@ -1,6 +1,7 @@
 var express = require("express");
 var lodash = require("lodash");
 var models = require("../models");
+var moment = require("moment");
 var router = express.Router();
 
 router.get("/", function (req, res) {
@@ -86,6 +87,51 @@ router.post("/contact", function (req, res) {
 		}).catch(function(err){
 			res.send(err);
 		});
+	}
+});
+
+router.get("/lease/:PropertyID", function (req, res) {
+	if(lodash.isEmpty(req.cookies)){
+		res.send("Access Denied");
+	}
+	else{
+		models.Lease.find({
+			where:{
+				deletedAt: null,
+				PropertyID: req.params.PropertyID
+			}
+		}).then(function(lease){
+			res.send(lease.LeaseTemplate);
+		}).catch(function(err){
+			res.send(err);
+		});		
+	}
+});
+
+router.post("/lease", function (req, res) {
+	if(lodash.isEmpty(req.cookies)){
+		res.send("Access Denied");
+	}
+	else{
+		models.Lease.update({
+			deletedAt: moment().format("YYYY-MM-DD HH:mm:ss")
+		}, {
+			where:{
+				deletedAt: null,
+				PropertyID: req.body.PropertyID
+			}
+		}).then(function(old){
+			models.Lease.create({
+				PropertyID: req.body.PropertyID,
+				LeaseTemplate: req.body.LeaseTemplate
+			}).then(function(contact){
+				res.send(true);
+			}).catch(function(err){
+				res.send(err);
+			});
+		}).catch(function(err){
+			res.send(err);
+		});		
 	}
 });
 

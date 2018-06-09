@@ -43,6 +43,9 @@ var models = [{
 },{
 	name: "GrievanceMessage",
 	file: "grievance_message"
+},{
+	name: "Lease",
+	file: "lease"
 }];
 
 models.forEach(function(model) {
@@ -157,6 +160,12 @@ sequelize.authenticate().then(function(err){
 		model.Grievance.hasMany(model.GrievanceMessage, {
 			foreignKey: {
 				name: "GrievanceID",
+				allowNull: false
+			}
+		});
+		model.Lease.belongsTo(model.Property, {
+			foreignKey: {
+				name: "PropertyID",
 				allowNull: false
 			}
 		});

@@ -1,5 +1,6 @@
 var app = angular.module("Props", []);
 app.controller("PropertyController", function($scope, $http) {
+	$("#LeaseTemplate").summernote({ height: 300 });
 	$scope.getPropertyList = function(){
 		$http.get("/property").then(function(response){
 			$scope.properties = response.data;
@@ -54,6 +55,15 @@ app.controller("PropertyController", function($scope, $http) {
 		$scope.EmergencyContactPhone = null;
 		$scope.PropertyID = $(e.relatedTarget).data("property");
 		$("#FillContact").get(0).reset();
+	});
+	$("#Lease").on("show.bs.modal", function (e) {
+		$scope.PropertyID = $(e.relatedTarget).data("property");
+		$http.get("/property/lease/" + $scope.PropertyID).then(function(response){
+			$("#LeaseTemplate").summernote("code", response.data);
+		}, function(err){
+			console.log(err);
+		});
+		
 	});
 	$scope.addTenant = function(){
 		$http.post("/tenant", {
@@ -136,5 +146,17 @@ app.controller("PropertyController", function($scope, $http) {
 				console.log(err);
 			});
 		}
+	};
+	$scope.editLease = function(){
+		$http.post("/property/lease", {
+			PropertyID: $scope.PropertyID,
+			LeaseTemplate: $("#LeaseTemplate").summernote("code")
+		}).then(function(response){
+			if(response){
+				$("#Lease").modal("hide");
+			}
+		}, function(err){
+			console.log(err);
+		});
 	};
 });

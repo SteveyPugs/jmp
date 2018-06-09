@@ -56,20 +56,5 @@ app.controller("PropertyDashController", function($scope, $http) {
 		});
 	}, function(err){
 		console.log(err);
-	});	
-	// new Chart($("#LeaseChart")[0].getContext("2d"), {
-	// 	type: "doughnut",
-	// 	data: {
-	// 		labels: ["Signed", "In Review"],
-	// 		datasets: [{
-	// 			data: [12, 19],
-	// 			backgroundColor: ["#ff7675", "#00b894"],
-	// 			hoverBackgroundColor: ["#fab1a0", "#55efc4"],
-	// 			borderWidth: 0
-	// 		}]
-	// 	},
-	// 	options: {
-	// 		cutoutPercentage: 0
-	// 	}
-	// });
+	});
 });
