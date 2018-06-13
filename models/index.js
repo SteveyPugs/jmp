@@ -46,6 +46,9 @@ var models = [{
 },{
 	name: "Lease",
 	file: "lease"
+},{
+	name: "Document",
+	file: "document"
 }];
 
 models.forEach(function(model) {
@@ -166,6 +169,12 @@ sequelize.authenticate().then(function(err){
 		model.Lease.belongsTo(model.Property, {
 			foreignKey: {
 				name: "PropertyID",
+				allowNull: false
+			}
+		});
+		model.Document.belongsTo(model.Tenant, {
+			foreignKey: {
+				name: "TenantID",
 				allowNull: false
 			}
 		});

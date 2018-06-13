@@ -1,5 +1,5 @@
-var app = angular.module("Props", []);
-app.controller("PropertyController", function($scope, $http) {
+var app = angular.module("Props", ["ngFileUpload"]);
+app.controller("PropertyController", function($scope, $http, Upload) {
 	$("#LeaseTemplate").summernote({ height: 300 });
 	$scope.getPropertyList = function(){
 		$http.get("/property").then(function(response){
@@ -159,4 +159,25 @@ app.controller("PropertyController", function($scope, $http) {
 			console.log(err);
 		});
 	};
+	$("#AddDocument").on("show.bs.modal", function (e) {
+		$scope.TenantID = $(e.relatedTarget).data("tenant");
+	});
+	$scope.addDocument = function(){
+		if($scope.Document){
+			Upload.upload({
+				method: "POST",
+	            url: "/tenant/document",
+	            data: {
+	            	TenantID: $scope.TenantID,
+	            	Document: $scope.Document
+	            }
+	        }).then(function(response){
+	        	if(response){
+					$("#AddDocument").modal("hide");
+				}
+	        }, function(err){
+	            console.log(err);
+	        });
+		}
+	};	
 });

@@ -47,6 +47,14 @@ app.controller("TenantController", function($scope, $http) {
 		});
 	};
 	$scope.getGrievances();
+	$scope.getDocuments = function(){
+		$http.get("/tenant/documents").then(function(response){
+			$scope.documents = response.data;
+		}, function(err){
+			console.log(err);
+		});
+	};
+	$scope.getDocuments();
 	$scope.go = function(num){
 		$scope.page = $scope.page + num;
 		$scope.offset = ($scope.page - 1) * 5;

@@ -133,14 +133,13 @@ br
 									th Upload Date
 									th Download
 							tbody
-								tr
-									td Lease_2018.pdf
-									td 2018-01-01
-									td Link
-								tr
-									td Lease_2017.pdf
-									td 2017-01-01
-									td Link
+								tr(ng-repeat="document in documents")
+									td {{ document.DocumentName }}
+									td {{ document.createdAt | date:"yyyy-MM-dd hh:mm:ss a" }}
+									td
+										a(href="/tenant/document/{{document.DocumentID}}") Download
+								tr(ng-if="documents.length === 0")
+									td(colspan="3" align="center") No documents
 					#contacts.tab-pane(role="tabpanel" aria-labelledby="contacts-tab")
 						.row
 							.col-lg(ng-repeat="contact in contacts")

@@ -3,6 +3,9 @@ var lodash = require("lodash");
 var moment = require("moment");
 var bcrypt = require("bcrypt");
 var Chance = require("chance");
+var mime = require("mime");
+var stream = require("stream");
+var fs = require("fs");
 var models = require("../models");
 var router = express.Router();
 
@@ -99,6 +102,76 @@ router.get("/unit/property", function (req, res) {
 			});
 		}).catch(function(err){
 			res.send(err);
+		});
+	}
+});
+
+router.get("/documents", function (req, res) {
+	if(lodash.isEmpty(req.cookies)){
+		res.send("Access Denied");
+	}
+	else{
+		models.Document.findAll({
+			where:{
+				TenantID: req.cookies.TenantID,
+				deletedAt: null
+			},
+			raw: true,
+			attributes:["DocumentID", "DocumentName", "createdAt"],
+			order: [["createdAt", "DESC"]]
+		}).then(function(documents){		
+			res.send(documents);
+		}).catch(function(err){
+			res.send(err);
+		});
+	}
+});
+
+router.get("/document/:DocumentID", function (req, res) {
+	if(lodash.isEmpty(req.cookies)){
+		res.send("Access Denied");
+	}
+	else{
+		models.Document.find({
+			where:{
+				DocumentID: req.params.DocumentID
+			},
+			raw: true,
+			attributes:["DocumentName", "Document"]
+		}).then(function(doc){
+  			var fileContents = Buffer.from(doc.Document, "base64");
+			var mimetype = mime.getType(doc.DocumentName);
+			res.setHeader("Content-disposition", "attachment; filename=" + doc.DocumentName);
+			res.setHeader("Content-type", mimetype);
+			var readStream = new stream.PassThrough();
+			readStream.end(fileContents);
+			readStream.pipe(res);
+		}).catch(function(err){
+			console.log(err);
+			res.send(err);
+		});
+	}
+});
+
+router.post("/document", function (req, res) {
+	if(lodash.isEmpty(req.cookies)){
+		res.send("Access Denied");
+	}
+	else{
+		fs.readFile(req.files.Document.path, function(err,data){
+			if(err) return res.send(err);
+			models.Document.create({
+				DocumentName: req.files.Document.originalFilename,
+				TenantID: req.body.TenantID,
+				Document: data
+			}).then(function(tenant){
+				fs.unlink(req.files.Document.path, function(err){
+					if(err) return res.send(err);
+					return res.send(true);
+				});
+			}).catch(function(err){
+				res.send(err);
+			});
 		});
 	}
 });

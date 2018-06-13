@@ -2,12 +2,16 @@ const express = require("express");
 const opn = require("opn");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
+const multipart = require("connect-multiparty");
 const config = require("./config");
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json());
 app.set("view engine", "pug");
 app.use(cookieParser());
+app.use(multipart({
+	uploadDir: __dirname + "/tmp"
+}));
 const index = require("./routes");
 const register = require("./routes/register");
 const login = require("./routes/login");

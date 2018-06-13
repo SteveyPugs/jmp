@@ -53,6 +53,7 @@ br
 										.btn-group.btn-group-sm(role="group")
 											button.btn.btn-light(type="button" data-toggle="modal" data-target="#TenantPayment" data-tenant="{{selectUnit.UnitTenants.Tenant.TenantID}}" data-unit="{{selectUnit.UnitID}}") Payments
 											button.btn.btn-light(type="button" data-toggle="modal" data-target="#TenantComplaint" data-tenant="{{selectUnit.UnitTenants.Tenant.TenantID}}" data-unit="{{selectUnit.UnitID}}") Complaints
+											button.btn.btn-light(type="button" data-toggle="modal" data-target="#AddDocument" data-tenant="{{selectUnit.UnitTenants.Tenant.TenantID}}") Add Document
 											button.btn.btn-light(type="button" ng-click="evictTenant(selectUnit.UnitTenants.Tenant.TenantID, selectUnit.UnitID)") Evict
 		include partials/tenant_form.pug
 		include partials/tenant_form_finish.pug
@@ -61,4 +62,5 @@ br
 		include partials/tenant_payment.pug
 		include partials/tenant_complaint.pug
 		include partials/lease.pug
+		include partials/document.pug
 include partials/footer.pug
