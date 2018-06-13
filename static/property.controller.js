@@ -1,6 +1,43 @@
 var app = angular.module("Props", ["ngFileUpload"]);
 app.controller("PropertyController", function($scope, $http, Upload) {
-	$("#LeaseTemplate").summernote({ height: 300 });
+	$("#LeaseTemplate").summernote({
+		height: 300,
+		toolbar: [
+			["style", ["bold", "italic", "underline", "clear"]],
+			["font", ["strikethrough", "superscript", "subscript"]],
+			["fontsize", ["fontsize"]],
+			["color", ["color"]],
+			["para", ["ul", "ol", "paragraph"]],
+			["height", ["height"]],
+			["custom", ["FullName", "Email"]]
+		],
+		buttons: {
+			FullName: function(context){
+				var ui = $.summernote.ui;
+				var button = ui.button({
+					contents: "<i class='fa fa-child'/> Add Full Name",
+					tooltip: "Add Full Name",
+					click: function(){
+						context.invoke("editor.insertText", "#FullName#");
+					},
+					container: false
+				});
+				return button.render();
+			},
+			Email: function(context){
+				var ui = $.summernote.ui;
+				var button = ui.button({
+					contents: "<i class='fa fa-child'/> Add Email",
+					tooltip: "Add Email",
+					click: function(){
+						context.invoke("editor.insertText", "#Email#");
+					},
+					container: false
+				});
+				return button.render();
+			}
+		}
+	});
 	$scope.getPropertyList = function(){
 		$http.get("/property").then(function(response){
 			$scope.properties = response.data;
