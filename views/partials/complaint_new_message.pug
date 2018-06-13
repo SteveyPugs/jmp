@@ -12,7 +12,7 @@
 					.row
 						.col-lg
 							label(for="GrievanceMessage") Message
-							textarea#GrievanceMessage.form-control.form-control-sm(rows="3" required ng-model="GrievanceMessage")
+							textarea#GrievanceMessage.form-control.form-control-sm(rows="3" required ng-model="$parent.GrievanceMessage")
 							.invalid-feedback Please enter a message
 					br
 					button.btn.btn-primary.btn-sm(ng-disabled="NewComplaintMessage.$invalid" type="submit") Send
