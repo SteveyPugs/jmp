@@ -2,6 +2,7 @@ var express = require("express");
 var lodash = require("lodash");
 var models = require("../models");
 var moment = require("moment");
+var wkhtmltopdf = require("wkhtmltopdf");
 var router = express.Router();
 
 router.get("/", function (req, res) {
@@ -132,6 +133,36 @@ router.post("/lease", function (req, res) {
 		}).catch(function(err){
 			res.send(err);
 		});		
+	}
+});
+
+router.get("/lease/:TenantID/:PropertyID", function (req, res) {
+	if(lodash.isEmpty(req.cookies)){
+		res.send("Access Denied");
+	}
+	else{
+		models.Tenant.find({
+			where:{
+				TenantID: req.params.TenantID
+			},
+			attributes:["TenantEmail", "TenantFullName"],
+			raw: true
+		}).then(function(tenant){
+			models.Lease.find({
+				where:{
+					PropertyID: req.params.PropertyID
+				},
+				raw: true
+			}).then(function(lease){
+				res.setHeader("Content-disposition", "attachment; filename='Lease_Agreement_" + tenant.TenantFullName.replace(" ", "_") +  ".pdf'")
+				res.setHeader("Content-type", "application/pdf")
+				wkhtmltopdf(lease.LeaseTemplate.replace("#FullName#", tenant.TenantFullName).replace("#Email#", tenant.TenantEmail)).pipe(res);
+			}).catch(function(err){
+				res.send(err);
+			});
+		}).catch(function(err){
+			res.send(err);
+		});
 	}
 });
 

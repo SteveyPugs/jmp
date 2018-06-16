@@ -54,6 +54,7 @@ br
 											button.btn.btn-light(type="button" data-toggle="modal" data-target="#TenantPayment" data-tenant="{{selectUnit.UnitTenants.Tenant.TenantID}}" data-unit="{{selectUnit.UnitID}}") Payments
 											button.btn.btn-light(type="button" data-toggle="modal" data-target="#TenantComplaint" data-tenant="{{selectUnit.UnitTenants.Tenant.TenantID}}" data-unit="{{selectUnit.UnitID}}") Complaints
 											button.btn.btn-light(type="button" data-toggle="modal" data-target="#AddDocument" data-tenant="{{selectUnit.UnitTenants.Tenant.TenantID}}") Add Document
+											a.btn.btn-light(href="/property/lease/{{selectUnit.UnitTenants.Tenant.TenantID}}/{{selectedProperty.PropertyID}}") Generate Lease
 											button.btn.btn-light(type="button" ng-click="evictTenant(selectUnit.UnitTenants.Tenant.TenantID, selectUnit.UnitID)") Evict
 		include partials/tenant_form.pug
 		include partials/tenant_form_finish.pug
