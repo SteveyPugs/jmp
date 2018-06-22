@@ -1,0 +1,42 @@
+include partials/header.pug
+body
+	include partials/nav.pug
+	br
+	.container
+		br
+		br
+		br
+		.row
+			.col-lg-3
+			.col-lg-6
+				.card
+					h5.card-header.text-center #{title}
+					.card-body
+						if Landlord
+							form.needs-validation(novalidate method="post" action="/login/landlord")
+								.form-group
+									label(for="Email") E-Mail
+									input#Email.form-control.form-control-sm(type="email" placeholder="name@example.com" name="Email" required)
+									.invalid-feedback Please enter a valid e-mail
+								.form-group
+									label(for="Password") Password
+									input#Password.form-control.form-control-sm(type="password" name="Password" required)
+									.invalid-feedback Please enter a password
+								button.btn.btn-dark.btn-block.btn-sm(type="submit") Sign In
+							br
+							a.btn.btn-link.text-center.btn-block(href="/forgot") Forgot Password
+						else
+							form.needs-validation(novalidate method="post" action="/login/tenant")
+								.form-group
+									label(for="Email") E-Mail
+									input#Email.form-control.form-control-sm(type="email" placeholder="name@example.com" name="Email" required)
+									.invalid-feedback Please enter a valid e-mail
+								.form-group
+									label(for="Password") Password
+									input#Password.form-control.form-control-sm(type="password" name="Password" required)
+									.invalid-feedback Please enter a password
+								button.btn.btn-dark.btn-block.btn-sm(type="submit") Sign In
+							br
+							a.btn.btn-link.text-center.btn-block(href="/forgot") Forgot Password
+			.col-lg-3
+include partials/footer.pug

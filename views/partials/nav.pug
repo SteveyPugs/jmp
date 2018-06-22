@@ -10,9 +10,7 @@ nav.navbar.navbar-expand-lg.navbar-dark(style="background-color: #00b894;")
         a#loginDropdown.nav-link.dropdown-toggle(href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false")
           | Client Login
         .dropdown-menu(aria-labelledby="loginDropdown")
-          a.dropdown-item(data-toggle="modal" data-target="#TenantModal") Tenant
-          a.dropdown-item(data-toggle="modal" data-target="#LandLordModal") Landlord
+          a.dropdown-item(href="/login/tenant" ) Tenant
+          a.dropdown-item(href="/login/landlord") Landlord
       li.nav-item
         a.nav-link(href="/support") Support
-include landlordlogin.pug
-include tenantlogin.pug

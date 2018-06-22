@@ -18,6 +18,7 @@
   "homepage": "https://github.com/SteveyPugs/jmp#readme",
   "dependencies": {
     "angular": "1.6.9",
+    "async": "2.6.1",
     "bcrypt": "1.0.3",
     "body-parser": "1.18.2",
     "bootstrap": "4.0.0",
