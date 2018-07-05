@@ -11,7 +11,7 @@ router.post("/", function (req, res) {
 		models.Grievance.create({
 			GrievanceStatus: false,
 			GrievanceCategoryID: req.body.GrievanceCategoryID,
-			TenantID: req.cookies.TenantID 
+			UserID: req.cookies.UserID 
 		}).then(function(new_record){
 			models.GrievanceMessage.create({
 				GrievanceMessage: req.body.GrievanceMessage,
@@ -20,10 +20,10 @@ router.post("/", function (req, res) {
 			}).then(function(new_message){
 				res.send(true);
 			}).catch(function(err){
-				res.send(err.stack);
+				res.send(err);
 			});
 		}).catch(function(err){
-			res.send(err.stack);
+			res.send(err);
 		});
 	}
 });
@@ -83,7 +83,7 @@ router.get("/categories", function (req, res) {
 	}
 });
 
-router.get("/tenant/:TenantID", function (req, res) {
+router.get("/tenant/:UserID", function (req, res) {
 	if(lodash.isEmpty(req.cookies)){
 		res.send("Access Denied");
 	}
@@ -91,9 +91,9 @@ router.get("/tenant/:TenantID", function (req, res) {
 		models.Grievance.findAll({
 			where:{
 				deletedAt: null,
-				TenantID: req.params.TenantID
+				UserID: req.params.UserID
 			},
-			attributes: ["GrievanceID", "createdAt", "updatedAt", "AdminID", "GrievanceStatus"],
+			attributes: ["GrievanceID", "createdAt", "updatedAt", "UserID", "GrievanceStatus"],
 			include:[{
 				model: models.GrievanceCategory,
 				attributes: ["GrievanceCategory"]
@@ -114,7 +114,7 @@ router.get("/:status", function (req, res) {
 		models.Grievance.findAndCountAll({
 			where:{
 				deletedAt: null,
-				TenantID: req.cookies.TenantID,
+				UserID: req.cookies.UserID,
 				GrievanceStatus: (req.params.status === "open" ? false : true)
 			},
 			attributes: ["GrievanceID", "createdAt", "updatedAt", "GrievanceCode"],

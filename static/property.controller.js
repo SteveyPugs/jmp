@@ -58,22 +58,15 @@ app.controller("PropertyController", function($scope, $http, Upload) {
 			console.log(err);
 		});
 	};
-	$scope.isEmailDisabled = false;
-	$scope.emailOptOut = function(){
-		$scope.isEmailDisabled = !$scope.isEmailDisabled;
-	};
 	$("#Tenant").on("show.bs.modal", function (e) {
 		$scope.TenantName = null;
 		$scope.TenantEmail = null;
 		$scope.UnitID = $(e.relatedTarget).data("unit");
-		$scope.$apply(function () {
-			$scope.isEmailDisabled = false;
-		});
 		$("#FillVacancy").get(0).reset();
 	});
 	$("#TenantPayment").on("show.bs.modal", function (e) {
 		$scope.UnitID = $(e.relatedTarget).data("unit");
-		$http.get("/payment/tenant/" + $(e.relatedTarget).data("tenant")).then(function(response){
+		$http.get("/payment/tenant/" + $(e.relatedTarget).data("user")).then(function(response){
 			$scope.payments = response.data;
 		}, function(err){
 			console.log(err);
@@ -81,7 +74,7 @@ app.controller("PropertyController", function($scope, $http, Upload) {
 	});
 	$("#TenantComplaint").on("show.bs.modal", function (e) {
 		$scope.UnitID = $(e.relatedTarget).data("unit");
-		$http.get("/grievance/tenant/" + $(e.relatedTarget).data("tenant")).then(function(response){
+		$http.get("/grievance/tenant/" + $(e.relatedTarget).data("user")).then(function(response){
 			$scope.complaints = response.data;
 		}, function(err){
 			console.log(err);
@@ -170,20 +163,6 @@ app.controller("PropertyController", function($scope, $http, Upload) {
 			console.log(err);
 		});
 	};
-	$scope.evictTenant = function(tenantid, unitid){
-		if (confirm("Are you sure you want to do this? This is not reversable.")) {
-			$http.post("/tenant/evict", {
-				TenantID: tenantid,
-				UnitID: unitid
-			}).then(function(response){
-				if(response){
-					$scope.getPropertyInformation();
-				}
-			}, function(err){
-				console.log(err);
-			});
-		}
-	};
 	$scope.editLease = function(){
 		$http.post("/property/lease", {
 			PropertyID: $scope.PropertyID,
@@ -197,7 +176,7 @@ app.controller("PropertyController", function($scope, $http, Upload) {
 		});
 	};
 	$("#AddDocument").on("show.bs.modal", function (e) {
-		$scope.TenantID = $(e.relatedTarget).data("tenant");
+		$scope.UserID = $(e.relatedTarget).data("user");
 	});
 	$scope.addDocument = function(){
 		if($scope.Document){
@@ -205,7 +184,7 @@ app.controller("PropertyController", function($scope, $http, Upload) {
 				method: "POST",
 	            url: "/tenant/document",
 	            data: {
-	            	TenantID: $scope.TenantID,
+	            	UserID: $scope.UserID,
 	            	Document: $scope.Document
 	            }
 	        }).then(function(response){

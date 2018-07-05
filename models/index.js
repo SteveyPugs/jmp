@@ -8,17 +8,14 @@ var sequelize = new Sequelize(config.database.database, config.database.user, co
 });
 
 var models = [{
-	name: "Landlord",
-	file: "landlord"
+	name: "User",
+	file: "user"
 },{
 	name: "Property",
 	file: "property"
 },{
 	name: "Unit",
 	file: "unit"
-},{
-	name: "Tenant",
-	file: "tenant"
 },{
 	name: "UnitTenant",
 	file: "unit_tenant"
@@ -34,9 +31,6 @@ var models = [{
 },{
 	name: "GrievanceCategory",
 	file: "grievance_category"
-},{
-	name: "Admin",
-	file: "admin"
 },{
 	name: "Grievance",
 	file: "grievance"
@@ -58,9 +52,9 @@ models.forEach(function(model) {
 sequelize.authenticate().then(function(err){
 	if(err) console.log(err);
 	(function(model){
-		model.Property.belongsTo(model.Landlord, {
+		model.Property.belongsTo(model.User, {
 			foreignKey: {
-				name: "LandlordID",
+				name: "UserID",
 				allowNull: false
 			}
 		});
@@ -88,21 +82,21 @@ sequelize.authenticate().then(function(err){
 				allowNull: false
 			}
 		});
-		model.Tenant.hasMany(model.UnitTenant, {
+		model.User.hasMany(model.UnitTenant, {
 			foreignKey: {
-				name: "TenantID",
+				name: "UserID",
 				allowNull: false
 			}
 		});
-		model.UnitTenant.belongsTo(model.Tenant, {
+		model.UnitTenant.belongsTo(model.User, {
 			foreignKey: {
-				name: "TenantID",
+				name: "UserID",
 				allowNull: false
 			}
 		});
-		model.PaymentOption.belongsTo(model.Tenant, {
+		model.PaymentOption.belongsTo(model.User, {
 			foreignKey: {
-				name: "TenantID",
+				name: "UserID",
 				allowNull: false
 			}
 		});
@@ -118,40 +112,28 @@ sequelize.authenticate().then(function(err){
 				allowNull: true
 			}
 		});
-		model.Tenant.hasMany(model.Payment, {
+		model.User.hasMany(model.Payment, {
 			foreignKey: {
-				name: "TenantID",
+				name: "UserID",
 				allowNull: false
 			}
 		});
-		model.Payment.belongsTo(model.Tenant, {
+		model.Payment.belongsTo(model.User, {
 			foreignKey: {
-				name: "TenantID",
+				name: "UserID",
 				allowNull: false
 			}
 		});
-		model.Tenant.hasMany(model.Grievance, {
+		model.User.hasMany(model.Grievance, {
 			foreignKey: {
-				name: "TenantID",
+				name: "UserID",
 				allowNull: false
 			}
 		});
-		model.Grievance.belongsTo(model.Tenant, {
+		model.Grievance.belongsTo(model.User, {
 			foreignKey: {
-				name: "TenantID",
+				name: "UserID",
 				allowNull: false
-			}
-		});
-		model.Admin.hasMany(model.Grievance, {
-			foreignKey: {
-				name: "AdminID",
-				allowNull: true
-			}
-		});
-		model.Grievance.belongsTo(model.Admin, {
-			foreignKey: {
-				name: "TenantID",
-				allowNull: true
 			}
 		});
 		model.Grievance.belongsTo(model.GrievanceCategory, {
@@ -172,9 +154,9 @@ sequelize.authenticate().then(function(err){
 				allowNull: false
 			}
 		});
-		model.Document.belongsTo(model.Tenant, {
+		model.Document.belongsTo(model.User, {
 			foreignKey: {
-				name: "TenantID",
+				name: "UserID",
 				allowNull: false
 			}
 		});

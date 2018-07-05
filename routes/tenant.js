@@ -17,15 +17,15 @@ router.post("/", function (req, res) {
 	else{
 		var password = chance.word({ length: 10 }).toUpperCase();
 		console.log(password)
-		models.Tenant.create({
-			TenantOptOut: req.body.TenantEmail ? false : true,
-			TenantEmail: req.body.TenantEmail ? req.body.TenantEmail : null,
-			TenantPassword: req.body.TenantEmail ? bcrypt.hashSync(password, bcrypt.genSaltSync(10)) : null,
-			TenantFullName: req.body.TenantName
-		}).then(function(tenant){
+		models.User.create({
+			UserEmail: req.body.TenantEmail,
+			UserPassword: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
+			UserFullName: req.body.TenantName,
+			UserLevel: 3
+		}).then(function(user){
 			models.UnitTenant.create({
 				UnitID: req.body.UnitID,
-				TenantID: tenant.TenantID
+				UserID: user.UserID
 			}).then(function(unit_tenant){
 				models.Unit.update({
 					UnitVacant: false
@@ -47,36 +47,6 @@ router.post("/", function (req, res) {
 	}
 });
 
-router.post("/evict", function (req, res) {
-	if(lodash.isEmpty(req.cookies)){
-		res.send("Access Denied");
-	}
-	else{
-		models.UnitTenant.update({
-			deletedAt: moment().format("YYYY-MM-DD HH:mm:ss")
-		}, {
-			where:{
-				UnitID: req.body.UnitID,
-				TenantID: req.body.TenantID
-			}
-		}).then(function(unit_tenant){
-			models.Unit.update({
-				UnitVacant: true
-			},{
-				where:{
-					UnitID: req.body.UnitID
-				}
-			}).then(function(unit){
-				return res.send(true);
-			}).catch(function(err){
-				res.send(err);
-			});
-		}).catch(function(err){
-			res.send(err);
-		});
-	}
-});
-
 router.get("/unit/property", function (req, res) {
 	if(lodash.isEmpty(req.cookies)){
 		res.send("Access Denied");
@@ -84,7 +54,7 @@ router.get("/unit/property", function (req, res) {
 	else{
 		models.UnitTenant.find({
 			where:{
-				TenantID: req.cookies.TenantID
+				UserID: req.cookies.UserID
 			},
 			attributes: ["UnitID"],
 			raw: true
@@ -113,7 +83,7 @@ router.get("/documents", function (req, res) {
 	else{
 		models.Document.findAll({
 			where:{
-				TenantID: req.cookies.TenantID,
+				UserID: req.cookies.UserID,
 				deletedAt: null
 			},
 			raw: true,
@@ -147,7 +117,6 @@ router.get("/document/:DocumentID", function (req, res) {
 			readStream.end(fileContents);
 			readStream.pipe(res);
 		}).catch(function(err){
-			console.log(err);
 			res.send(err);
 		});
 	}
@@ -162,7 +131,7 @@ router.post("/document", function (req, res) {
 			if(err) return res.send(err);
 			models.Document.create({
 				DocumentName: req.files.Document.originalFilename,
-				TenantID: req.body.TenantID,
+				UserID: req.body.UserID,
 				Document: data
 			}).then(function(tenant){
 				fs.unlink(req.files.Document.path, function(err){

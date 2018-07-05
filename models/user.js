@@ -1,29 +1,29 @@
 module.exports = function(sequelize, DataTypes){
-	var Tenant = sequelize.define("Tenant", {
-		TenantID: {
+	var User = sequelize.define("User", {
+		UserID: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
 			primaryKey: true,
 			autoIncrement: true
 		},
-		TenantOptOut: {
-			type: DataTypes.BOOLEAN,
-			allowNull: true
-		},
-		TenantEmail: {
+		UserEmail: {
 			type: DataTypes.STRING,
-			allowNull: true
+			allowNull: false
 		},
-		TenantPassword: {
+		UserPassword: {
 			type: DataTypes.STRING,
-			allowNull: true
+			allowNull: false
 		},
-		TenantFullName: {
+		UserFullName: {
 			type: DataTypes.STRING,
+			allowNull: false
+		},
+		UserLevel: {
+			type: DataTypes.INTEGER,
 			allowNull: false
 		}
 	},{
 		paranoid: true
 	});
-	return Tenant;
+	return User;
 };

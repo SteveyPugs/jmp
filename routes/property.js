@@ -12,7 +12,7 @@ router.get("/", function (req, res) {
 	else{
 		models.Property.findAll({
 			where:{
-				LandLordID: req.cookies.LandLordID
+				UserID: req.cookies.UserID
 			},
 			raw: true
 		}).then(function(properties){
@@ -35,7 +35,7 @@ router.post("/", function (req, res) {
 			PropertyState: req.body.RegisterState,
 			PropertyUnitCount: req.body.RegisterNumberOfUnits,
 			PropertyType: req.body.RegisterTypeOptions,
-			LandlordID: req.cookies.LandLordID,
+			UserID: req.cookies.UserID,
 			PropertyResidentialType: req.body.ResidentialType
 		}).then(function(property){
 			var units = [];
@@ -136,27 +136,27 @@ router.post("/lease", function (req, res) {
 	}
 });
 
-router.get("/lease/:TenantID/:PropertyID", function (req, res) {
+router.get("/lease/:UserID/:PropertyID", function (req, res) {
 	if(lodash.isEmpty(req.cookies)){
 		res.send("Access Denied");
 	}
 	else{
-		models.Tenant.find({
+		models.User.find({
 			where:{
-				TenantID: req.params.TenantID
+				UserID: req.params.UserID
 			},
-			attributes:["TenantEmail", "TenantFullName"],
+			attributes:["UserEmail", "UserFullName"],
 			raw: true
-		}).then(function(tenant){
+		}).then(function(user){
 			models.Lease.find({
 				where:{
 					PropertyID: req.params.PropertyID
 				},
 				raw: true
 			}).then(function(lease){
-				res.setHeader("Content-disposition", "attachment; filename='Lease_Agreement_" + tenant.TenantFullName.replace(" ", "_") +  ".pdf'")
+				res.setHeader("Content-disposition", "attachment; filename='Lease_Agreement_" + user.UserFullName.replace(" ", "_") +  ".pdf'")
 				res.setHeader("Content-type", "application/pdf")
-				wkhtmltopdf(lease.LeaseTemplate.replace("#FullName#", tenant.TenantFullName).replace("#Email#", tenant.TenantEmail)).pipe(res);
+				wkhtmltopdf(lease.LeaseTemplate.replace("#FullName#", user.UserFullName).replace("#Email#", user.UserEmail)).pipe(res);
 			}).catch(function(err){
 				res.send(err);
 			});

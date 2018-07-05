@@ -20,8 +20,8 @@ router.get("/:PropertyID", function (req, res) {
 				required: false,
 				attributes: [],
 				include:[{
-					model: models.Tenant,
-					attributes: ["TenantEmail", "TenantFullName", "TenantID", "TenantOptOut"]
+					model: models.User,
+					attributes: ["UserEmail", "UserFullName", "UserID"]
 				}]
 			}],
 			order: ["UnitTag"],
@@ -30,7 +30,6 @@ router.get("/:PropertyID", function (req, res) {
 		}).then(function(units){
 			res.send(units);
 		}).catch(function(err){
-			console.log(err);
 			res.send(err);
 		});
 	}

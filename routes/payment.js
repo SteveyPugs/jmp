@@ -12,7 +12,7 @@ router.get("/", function(req, res) {
 	else{
 		models.Payment.findAndCountAll({
 			where:{
-				TenantID: req.cookies.TenantID,
+				UserID: req.cookies.UserID,
 				deletedAt: null
 			},
 			include: [{
@@ -34,14 +34,14 @@ router.get("/", function(req, res) {
 	}
 });
 
-router.get("/tenant/:TenantID", function(req, res) {
+router.get("/tenant/:UserID", function(req, res) {
 	if(lodash.isEmpty(req.cookies)){
 		res.send("Access Denied");
 	}
 	else{
 		models.Payment.findAll({
 			where:{
-				TenantID: req.params.TenantID,
+				UserID: req.params.UserID,
 				deletedAt: null
 			},
 			include: [{
@@ -69,17 +69,19 @@ router.get("/option", function (req, res) {
 	else{
 		models.PaymentOption.find({
 			where:{
-				TenantID: req.cookies.TenantID,
+				UserID: req.cookies.UserID,
 				deletedAt: null
 			},
 			attributes: ["PaymentCCNumber","PaymentCheckAccount"],
 			raw: true
 		}).then(function(paymentoption){
-			if(paymentoption.PaymentCCNumber){
-				paymentoption.PaymentCCNumber = paymentoption.PaymentCCNumber.substring(paymentoption.PaymentCCNumber.length - 4, paymentoption.PaymentCCNumber.length);
-			}
-			else{
-				paymentoption.PaymentCheckAccount = paymentoption.PaymentCheckAccount.substring(paymentoption.PaymentCheckAccount.length - 4, paymentoption.PaymentCheckAccount.length);	
+			if(paymentoption){
+				if(paymentoption.PaymentCCNumber){
+					paymentoption.PaymentCCNumber = paymentoption.PaymentCCNumber.substring(paymentoption.PaymentCCNumber.length - 4, paymentoption.PaymentCCNumber.length);
+				}
+				else{
+					paymentoption.PaymentCheckAccount = paymentoption.PaymentCheckAccount.substring(paymentoption.PaymentCheckAccount.length - 4, paymentoption.PaymentCheckAccount.length);	
+				}
 			}
 			res.send(paymentoption);
 		}).catch(function(err){
@@ -95,7 +97,7 @@ router.get("/options", function (req, res) {
 	else{
 		models.PaymentOption.findAll({
 			where:{
-				TenantID: req.cookies.TenantID,
+				UserID: req.cookies.UserID,
 				deletedAt: null
 			},
 			raw: true
@@ -123,11 +125,11 @@ router.post("/", function (req, res) {
 		models.Payment.create({
 			PaymentAmount: req.body.PaymentAmount,
 			PaymentOptionID: req.body.PaymentOptionID,
-			TenantID: req.cookies.TenantID
+			UserID: req.cookies.UserID
 		}).then(function(payment){
 			res.send(true);
 		}).catch(function(err){
-			res.send(err.stack);
+			res.send(err);
 		});
 	}
 });
@@ -141,7 +143,7 @@ router.post("/option", function (req, res) {
 			deletedAt: moment().format("YYYY-MM-DD HH:mm:ss")
 		},{
 			where:{
-				TenantID: req.cookies.TenantID
+				UserID: req.cookies.UserID
 			}
 		}).then(function(property){		
 			models.PaymentOption.create({
@@ -151,14 +153,14 @@ router.post("/option", function (req, res) {
 				PaymentCheckRouting: req.body.PaymentOptionCheckingRouting,
 				PaymentCheckAccount: req.body.PaymentOptionCheckingAccount,
 				PaymentTypeID: req.body.PaymentOptionCreditCardNumber ? 1 : 2,
-				TenantID: req.cookies.TenantID
+				UserID: req.cookies.UserID
 			}).then(function(property){
 				res.send(true);
 			}).catch(function(err){
-				res.send(err.stack);
+				res.send(err);
 			});
 		}).catch(function(err){
-			res.send(err.stack);
+			res.send(err);
 		});
 	}
 });

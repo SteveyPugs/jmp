@@ -19,23 +19,24 @@ router.get("/complete", function (req, res) {
 
 router.post("/", function (req, res) {
 	var chance = new Chance();
-	models.Landlord.count({
+	models.User.count({
 		where:{
-			LandlordEmail: req.body.RegisterEmail
+			UserEmail: req.body.RegisterEmail
 		},
 		raw: true
-	}).then(function(landlord){
-		if(landlord > 0){
+	}).then(function(user){
+		if(user > 0){
 			res.redirect("/register/sorry");
 		}
 		else{
 			var password = chance.word({ length: 10 }).toUpperCase();
 			console.log(password)
-			models.Landlord.create({
-				LandlordEmail: req.body.RegisterEmail,
-				LandlordPassword: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
-				LandlordFullName: req.body.RegisterFullName
-			}).then(function(landlord){
+			models.User.create({
+				UserEmail: req.body.RegisterEmail,
+				UserPassword: bcrypt.hashSync(password, bcrypt.genSaltSync(10)),
+				UserFullName: req.body.RegisterFullName,
+				UserLevel: 2
+			}).then(function(user){
 				models.Property.create({
 					PropertyAddress: req.body.RegisterAddress,
 					PropertyCity: req.body.RegisterCity,
@@ -43,7 +44,7 @@ router.post("/", function (req, res) {
 					PropertyState: req.body.RegisterState,
 					PropertyUnitCount: req.body.RegisterNumberOfUnits,
 					PropertyType: req.body.RegisterTypeOptions,
-					LandlordID: landlord.LandlordID,
+					UserID: user.UserID,
 					PropertyResidentialType: req.body.ResidentialType
 				}).then(function(property){
 					var units = [];

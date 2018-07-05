@@ -11,7 +11,7 @@ router.get("/units", function (req, res) {
 	else{
 		models.Property.findAll({
 			where:{
-				LandlordID: req.cookies.LandLordID
+				UserID: req.cookies.UserID
 			},
 			raw: true,
 			attributes:["PropertyID"]
@@ -47,7 +47,7 @@ router.get("/grievances", function (req, res) {
 	else{
 		models.Property.findAll({
 			where:{
-				LandlordID: req.cookies.LandLordID
+				UserID: req.cookies.UserID
 			},
 			raw: true,
 			attributes:["PropertyID"]
@@ -106,7 +106,7 @@ router.get("/payments", function (req, res) {
 	else{
 		models.Property.findAll({
 			where:{
-				LandlordID: req.cookies.LandLordID
+				UserID: req.cookies.UserID
 			},
 			raw: true
 		}).then(function(properties){
@@ -123,8 +123,8 @@ router.get("/payments", function (req, res) {
 						UnitID: listOfUnits
 					},
 					raw: true
-				}).then(function(tenants){
-					var listOfTenants = lodash.map(tenants, "TenantID");
+				}).then(function(users){
+					var listOfUsers = lodash.map(users, "UserID");
 					models.Payment.findAll({
 						where:{
 							deletedAt:{
@@ -134,13 +134,13 @@ router.get("/payments", function (req, res) {
 								$gte: moment().startOf("month").format("YYYY-MM-DD HH:mm:ss"),
 								$lte: moment().endOf("month").format("YYYY-MM-DD HH:mm:ss")
 							},
-							TenantID: listOfTenants
+							UserID: listOfUsers
 						},
 						raw: true
 					}).then(function(payments){
 						res.send({
 							Paid: payments.length,
-							Unpaid: listOfTenants.length - payments.length
+							Unpaid: listOfUsers.length - payments.length
 						});
 					}).catch(function(err){
 						res.send(err.stack);

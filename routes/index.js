@@ -15,65 +15,32 @@ router.get("/forgot", function (req, res) {
 });
 
 router.post("/forgot", function (req, res) {
-	async.parallel({
-		landlord: function(callback){
-			models.Landlord.find({
-				where:{
-					LandlordEmail: req.body.Email,
-					deletedAt: null
-				},
-				raw: true
-			}).then(function(landlord){
-				return callback(null, landlord);
-			}).catch(function(err){
-				return callback(err);
-			});
+	models.User.find({
+		where:{
+			UserEmail: req.body.Email,
+			deletedAt: null
 		},
-		tenant: function(callback){
-			models.Tenant.find({
-				where:{
-					TenantEmail: req.body.Email,
-					deletedAt: null
-				},
-				raw: true
-			}).then(function(tenant){
-				return callback(null, tenant);
-			}).catch(function(err){
-				return callback(err);
-			});
-		}
-	}, function(err, results){
-		if(err) return res.send(err);
+		raw: true
+	}).then(function(user){
 		var chance = new Chance();
 		var password = chance.word({ length: 10 }).toUpperCase();
 		console.log(password)
-		if(results.landlord){
-			models.Landlord.update({
-				LandlordPassword: bcrypt.hashSync(password, bcrypt.genSaltSync(10))
+		if(user){
+			models.User.update({
+				UserPassword: bcrypt.hashSync(password, bcrypt.genSaltSync(10))
 			},{
 				where:{
-					LandlordID: results.landlord.LandlordID,
+					UserID: user.UserID
 				}
-			}).then(function(landlord){
-				res.redirect("/reset");
-			}).catch(function(err){
-				res.send(err.stack);
-			});		
-		}
-		else if(results.tenant){
-			models.Tenant.update({
-				TenantPassword: bcrypt.hashSync(password, bcrypt.genSaltSync(10))
-			},{
-				where:{
-					TenantID: results.tenant.TenantID
-				}
-			}).then(function(landlord){
+			}).then(function(user){
 				res.redirect("/reset");
 			}).catch(function(err){
 				res.send(err.stack);
 			});
 		}
 		else res.redirect("/reset");
+	}).catch(function(err){
+		return callback(err);
 	});
 });
 
@@ -116,18 +83,30 @@ router.get("/support", function (req, res) {
 		});
 	}
 	else{
-		if(req.cookies.TenantID){
-			res.render("support", { title: "Support",
-				Landlord: false,
-				Tenant: true
-			});
-		}
-		else{
-			res.render("support", { title: "Support",
-				Landlord: true,
-				Tenant: false
-			});
-		}
+		models.User.find({
+			where:{
+				UserID: req.cookies.UserID
+			},
+			raw: true
+		}).then(function(user){
+			console.log(user)
+			switch(user.UserLevel){
+				case 2:
+					res.render("support", { title: "Support",
+						Landlord: true,
+						Tenant: false
+					});
+					break;
+				case 3:
+					res.render("support", { title: "Support",
+						Landlord: false,
+						Tenant: true
+					});
+					break;
+			}
+		}).catch(function(){
+			res.send(err);
+		});
 	}	
 });
 

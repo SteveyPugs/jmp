@@ -16,8 +16,4 @@
 						label(for="TenantEmail") E-Mail Address
 						input#TenantEmail.form-control.form-control-sm(type="email" ng-model="TenantEmail" placeholder="john.doe@example.com" ng-required="!isEmailDisabled" ng-disabled="isEmailDisabled")
 						.invalid-feedback Please enter a valid email address.
-					.form-group
-						.form-check
-							input#TenantEmailOptOut.form-check-input(type="checkbox" ng-click="emailOptOut()")
-							label.form-check-label(for="TenantEmailOptOut") Opt-Out of E-Mail
-					button.btn.btn-primary(ng-disabled="FillVacancy.$invalid" type="submit") Save
+					button.btn.btn-primary(ng-disabled="FillVacancy.$invalid" type="submit") Send
