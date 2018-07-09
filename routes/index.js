@@ -4,6 +4,7 @@ var async = require("async");
 var Chance = require("chance");
 var bcrypt = require("bcrypt");
 var models = require("../models");
+var security = require("./security");
 var router = express.Router();
 
 router.get("/", function (req, res) {
@@ -48,31 +49,16 @@ router.get("/reset", function (req, res) {
 	res.render("reset", { title: "Password Reset" });
 });
 
-router.get("/dashboard/landlord", function (req, res) {
-	if(lodash.isEmpty(req.cookies)){
-		res.redirect("/");
-	}
-	else{
-		res.render("landlord_dashboard", { title: "Landlord Dashboard" });
-	}
+router.get("/dashboard/landlord", security.signedIn, function (req, res) {
+	res.render("landlord_dashboard", { title: "Landlord Dashboard" });
 });
 
-router.get("/dashboard/tenant", function (req, res) {
-	if(lodash.isEmpty(req.cookies)){
-		res.redirect("/");
-	}
-	else{
-		res.render("tenant_dashboard", { title: "Tenant Dashboard" });
-	}
+router.get("/dashboard/tenant", security.signedIn, function (req, res) {
+	res.render("tenant_dashboard", { title: "Tenant Dashboard" });
 });
 
-router.get("/dashboard/landlord/property", function (req, res) {
-	if(lodash.isEmpty(req.cookies)){
-		res.redirect("/");
-	}
-	else{
-		res.render("landlord_dashboard_property", { title: "Landlord Dashboard - Property" });
-	}
+router.get("/dashboard/landlord/property", security.signedIn, function (req, res) {
+	res.render("landlord_dashboard_property", { title: "Landlord Dashboard - Property" });
 });
 
 router.get("/support", function (req, res) {
@@ -89,7 +75,6 @@ router.get("/support", function (req, res) {
 			},
 			raw: true
 		}).then(function(user){
-			console.log(user)
 			switch(user.UserLevel){
 				case 2:
 					res.render("support", { title: "Support",
