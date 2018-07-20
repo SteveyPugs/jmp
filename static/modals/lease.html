@@ -1,0 +1,12 @@
+<div class="modal-header">
+	<h5 class="modal-title">Lease</h5>
+	<button class="close" type="button" ng-click="cancel()">
+		<span>×</span>
+	</button>
+</div>
+<div class="modal-body">
+	<form ng-submit="saveLease()">
+		<textarea id="LeaseTemplate" class="form-control" rows="10"></textarea>
+		<button class="btn btn-block" ng-disabled="NewDocumentForm.$invalid" type="submit">Save</button>
+	</form>
+</div>

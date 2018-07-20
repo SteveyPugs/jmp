@@ -1,0 +1,34 @@
+<div class="modal-header">
+	<h5 class="modal-title">Complaints&nbsp;
+		<small>Unit #{{selectedUnit}}</small>
+	</h5>
+	<button class="close" type="button" ng-click="cancel()">
+		<span>×</span>
+	</button>
+</div>
+<div class="modal-body">
+	<table class="table table-bordered">
+		<caption style="caption-side:top;padding-top:0;">Last 5 Complaints</caption>
+		<thead>
+			<tr>
+				<th scope="col">Status</th>
+				<th scope="col">Category</th>
+				<th scope="col">Opened</th>
+				<th scope="col">Closed</th>
+				<th scope="col">Assignee</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="complaint in complaints">
+				<td>{{ complaint.GrievanceStatus ? "Closed" : "Open"}}</td>
+				<td>{{ complaint.GrievanceCategory.GrievanceCategory }}</td>
+				<td>{{ complaint.createdAt | date:"yyyy-MM-dd" }}</td>
+				<td>{{ complaint.GrievanceStatus ? (complaint.updatedAt | date:"yyyy-MM-dd") : "-"  }}</td>
+				<td>-</td>
+			</tr>
+			<tr ng-if="complaints.length === 0">
+				<td colspan="5" align="center">No Complaints</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

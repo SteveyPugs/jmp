@@ -1,0 +1,93 @@
+<div ng-include="'views/partials/nav.html'"></div>
+<br>
+<div class="container">
+	<div class="row">
+		<div class="col-lg">
+			<h4>Tell us more about who you are...</h4>
+			<hr>
+			<form class="was-validated" ng-submit="newRegistration()">
+				<div class="row">
+					<div class="col">
+						<label for="RegisterEmail">Email Address</label>
+						<input type="email" ng-model="RegisterForm.RegisterEmail" id="RegisterEmail" name="RegisterEmail" placeholder="name@example.com" class="form-control form-control-sm" required>
+						<div class="invalid-feedback">Please enter a valid e-mail</div>
+					</div>
+					<div class="col">
+						<label for="RegisterFullName">Full Name</label>
+						<input type="text" ng-model="RegisterForm.RegisterFullName" id="RegisterFullName" name="RegisterFullName" placeholder="John Doe" class="form-control form-control-sm" required>
+						<div class="invalid-feedback">Please enter your full name</div>
+					</div>
+				</div>
+				<br>
+				<div class="row">
+					<div class="col">
+						<label for="RegisterAddress">Address of Property</label>
+						<input type="text" ng-model="RegisterForm.RegisterAddress" id="RegisterAddress" name="RegisterAddress" placeholder="1 Apple Street" class="form-control form-control-sm" required>
+						<div class="invalid-feedback">Please enter the property street address</div>
+					</div>
+					<div class="col">
+						<label for="RegisterCity">City of Property</label>
+						<input type="text" ng-model="RegisterForm.RegisterCity" id="RegisterCity" name="RegisterCity" placeholder="New York" class="form-control form-control-sm" required>
+						<div class="invalid-feedback">Please enter the property city</div>
+					</div>
+				</div>
+				<br>
+				<div class="row">
+					<div class="col">
+						<label for="RegisterState">State of Property</label> 
+						<input type="text" ng-model="RegisterForm.RegisterState" id="RegisterState" name="RegisterState" placeholder="NY" class="form-control form-control-sm" required>
+						<div class="invalid-feedback">Please enter the property state</div>
+					</div>
+					<div class="col">
+						<label for="RegisterNumberOfUnits">Number of Units</label>
+						<input type="number" ng-model="RegisterForm.RegisterNumberOfUnits" id="RegisterNumberOfUnits" name="RegisterNumberOfUnits" placeholder="1" min="1" max="999" class="form-control form-control-sm" required>
+						<div class="invalid-feedback">Please enter the number of units</div>
+					</div>	
+				</div>
+				<br>
+				<div class="row">
+					<div class="col-lg-6">
+						<label for="RegisterZip">Zip of Property</label>
+						<input type="text" ng-model="RegisterForm.RegisterZip" id="RegisterZip" name="RegisterZip" maxlength="5" placeholder="10000" class="form-control form-control-sm" required>
+						<div class="invalid-feedback">Please enter the property zip code</div>
+					</div>
+					<div class="col">
+						<label>Type of Property</label> 
+						<br>
+						<div class="form-check">
+							<input type="radio" ng-model="RegisterForm.RegisterTypeOptions" id="RegisterTypeResidential" name="RegisterTypeOptions" class="form-check-input" required ng-click="showExtraResidential()" value="1">
+							<label class="form-check-label" for="RegisterTypeResidential">Residential</label>
+						</div>
+						<div class="form-check">
+							<input type="radio" ng-model="RegisterForm.RegisterTypeOptions" id="RegisterTypeCommerical" name="RegisterTypeOptions" class="form-check-input" required ng-click="showExtraResidential()" value="2">
+							<label class="form-check-label" for="RegisterTypeCommerical">Commercial</label>
+						</div>
+						<br>
+						<div class="invalid-feedback">Please choose a property type</div>
+					</div>
+					<div class="col" ng-model="RegisterForm.dddd" id=ResidentialType>
+						<label>Residential Type</label> 
+						<br>
+						<select class="form-control form-control-sm" ng-model="RegisterForm.ResidentialTypeSelect" id="ResidentialTypeSelect" name="ResidentialType" required>
+							<option></option>
+							<optgroup label="House">
+								<option>Single Family</option>
+								<option>Multi Family</option>
+							</optgroup>
+							<optgroup label="Building">
+								<option>Condo</option>
+								<option>Co-op</option>
+							</optgroup>
+							<optgroup label="Other">
+								<option>Other</option>
+							</optgroup>
+						</select>
+						<div class="invalid-feedback">Please choose a sub type</div>
+					</div>
+				</div>
+				<br>
+				<button class="btn btn-dark btn-block" type="submit" ng-disabled="RegisterForm.$invalid">Register</button>
+			</form>
+		</div>
+	</div>
+</div>		

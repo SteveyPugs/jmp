@@ -1,0 +1,25 @@
+<div ng-include="'views/partials/nav.html'"></div>
+<br>
+<div class="container">
+	<br>
+	<br>
+	<br>
+	<div class="row">
+		<div class="col-lg-3"></div>
+		<div class="col-lg-6">
+			<div class="card">
+				<h5 class="card-header text-center">Forgot Password</h5>
+				<div class="card-body">
+					<form class="was-validated" ng-submit="forgot()">
+						<div class="form-group">
+							<input type="email" ng-model="ForgotForm.Email" class="form-control form-control-sm" name="Email" id="Email" required placeholder="name@example.com" >
+							<div class="invalid-feedback">Please enter a valid e-mail</div>
+						</div>
+						<button class="btn btn-dark btn-block btn-sm" ng-disabled="ForgotForm.$invalid" type="submit">Reset Password</button>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-3"></div>
+	</div>
+</div>

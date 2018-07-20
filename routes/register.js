@@ -2,19 +2,12 @@ var express = require("express");
 var bcrypt = require("bcrypt");
 var Chance = require("chance");
 var lodash = require("lodash");
+var path = require("path");
 var router = express.Router();
 var models = require("../models");
 
 router.get("/", function (req, res) {
-	res.render("register", { title: "Registration" });
-});
-
-router.get("/sorry", function (req, res) {
-	res.render("register_sorry", { title: "Registration - Sorry" });
-});
-
-router.get("/complete", function (req, res) {
-	res.render("register_complete", { title: "Registration - Complete" });
+	res.sendFile(path.resolve(__dirname + "/../" + "/static/index.html"));
 });
 
 router.post("/", function (req, res) {
@@ -26,7 +19,7 @@ router.post("/", function (req, res) {
 		raw: true
 	}).then(function(user){
 		if(user > 0){
-			res.redirect("/register/sorry");
+			res.send(false);
 		}
 		else{
 			var password = chance.word({ length: 10 }).toUpperCase();
@@ -55,7 +48,7 @@ router.post("/", function (req, res) {
 						});
 					});
 					models.Unit.bulkCreate(units).then(function(units){
-						res.redirect("/register/complete");
+						res.send(true);
 					}).catch(function(err){
 						res.send(err.stack);
 					});

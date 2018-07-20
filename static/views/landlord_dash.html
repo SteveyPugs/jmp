@@ -1,0 +1,83 @@
+<div ng-include="'views/partials/nav_landlord.html'"></div>
+<br>
+<div class="container-fluid ng-cloak">
+	<div class="row">
+		<div class="col">
+			<label for="PropertySelect">Select a Property</label>
+			<button class="btn btn-link btn-sm" ng-click="openPropertyModal()">Add New Property</button>
+			<select id="PropertySelect" class="form-control form-control-sm" ng-change="getPropertyInformation()" ng-model="selectedProperty" ng-options='property as (property.PropertyAddress + ", " + property.PropertyCity + ", " + property.PropertyState + " " + property.PropertyZip + " (" + property.PropertyResidentialType + ")") for property in properties'></select>
+		</div>
+	</div>
+	<br>
+	<div class="row"ng-if="selectedProperty">
+		<div class="col-lg-3">
+			<div class="card">
+				<div class="card-body">
+					<h5 class="card-title">Menu</h5>
+					<hr>
+					<ul class="list-unstyled">
+						<li>
+							<a class="btn btn-link" href="#" style="font-size:13px;" role="button" ng-click="openContactModal(selectedProperty)">Add Emergency Contact</a>
+						</li>
+						<li>
+							<a class="btn btn-link" href="#" style="font-size:13px;" role="button" ng-click="openLeaseModal(selectedProperty)">Lease Template</a>
+						</li>
+					</ul>
+					<br>
+					<h5 class="card-title">Emergency Contacts</h5>
+					<hr>
+					<address ng-repeat="contact in contacts">
+						<i>
+							<small>{{contact.PropertyContactName}} ({{contact.PropertyContactTelephone}})</small>
+						</i>
+					</address>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-9">
+			<div id="accordion">
+				<div class="card" ng-repeat="selectUnit in selectUnits">
+					<div class="card-header" id="unitHeading{{selectUnit.UnitID}}" style="background-color:{{selectUnit.UnitVacant ? '#26A65B' : '#D24D57'}}">
+						<h5 class="mb-0">
+							<button class="btn btn-light collapsed" data-toggle="collapse" data-target="#unitCollapse{{selectUnit.UnitID}}">Unit #{{selectUnit.UnitTag}}</button>
+						</h5>
+					</div>
+					<div class="collapse show" id="unitCollapse{{selectUnit.UnitID}}">
+						<div class="card-body">
+							<div class="row">
+								<div class="col-lg-3" ng-if="!selectUnit.UnitTenants.User.UserID">
+									<button class="btn btn-outline-dark btn-block" type="button" ng-click="openTenantModal(selectUnit.UnitID)">Fill Vacancy</button>
+								</div>
+								<div class="col-lg" ng-if="selectUnit.UnitTenants.User.UserID">
+									<div class="row">
+										<div class="col-lg">
+											<label class="font-weight-bold">Name</label>
+											<br>
+											{{selectUnit.UnitTenants.User.UserFullName}}
+										</div>
+										<div class="col-lg">
+											<label class="font-weight-bold">Email</label>
+											<br>
+											{{selectUnit.UnitTenants.User.UserEmail}}
+										</div>	
+									</div>
+								</div>										
+							</div>
+							<br>
+							<div class="row">
+								<div class="col-lg" ng-if="selectUnit.UnitTenants.User.UserID">
+									<div class="btn-group btn-group-sm" role="group">
+										<button class="btn btn-light" ng-click="openPaymentModal(selectUnit.UnitTag, selectUnit.UnitTenants.User.UserID)" type="button">Payments</button>
+										<button class="btn btn-light" ng-click="openComplaintModal(selectUnit.UnitTag, selectUnit.UnitTenants.User.UserID)" type="button">Complaints</button>
+										<button class="btn btn-light" ng-click="openDocumentModal(selectUnit.UnitTenants.User.UserID)" type="button">Add Document</button>
+										<button class="btn btn-light" ng-click="generateLease(selectUnit.UnitTenants.User.UserID, selectedProperty.PropertyID)" type="button">Generate Lease</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

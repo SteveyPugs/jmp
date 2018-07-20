@@ -1,0 +1,16 @@
+<div class="modal-header">
+	<h5 class="modal-title">Add Document</h5>
+	<button class="close" type="button" ng-click="cancel()">
+		<span>×</span>
+	</button>
+</div>
+<div class="modal-body">
+	<form class="was-validated" ng-submit="createNewDocument()">
+		<div class="btn btn-primary" ngf-select="" name="Document" ngf-max-height="1000" ng-model="NewDocumentForm.Document">Add File</div>
+		<br>
+		<br>
+		<button class="btn btn-primary" ng-disabled="NewDocumentForm.$invalid" type="submit">Create</button>
+	</form>
+</div>
+
+		

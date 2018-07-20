@@ -6,7 +6,6 @@ var security = require("./security");
 var wkhtmltopdf = require("wkhtmltopdf");
 var router = express.Router();
 
-
 router.get("/", security.signedIn, function (req, res) {
 	models.Property.findAll({
 		where:{
@@ -29,7 +28,7 @@ router.post("/", security.signedIn, function (req, res) {
 		PropertyUnitCount: req.body.RegisterNumberOfUnits,
 		PropertyType: req.body.RegisterTypeOptions,
 		UserID: req.cookies.UserID,
-		PropertyResidentialType: req.body.ResidentialType
+		PropertyResidentialType: req.body.selectedResidentialType
 	}).then(function(property){
 		var units = [];
 		lodash.times(req.body.RegisterNumberOfUnits, function(v){

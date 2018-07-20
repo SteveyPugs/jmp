@@ -91,7 +91,7 @@ router.get("/document/:DocumentID", security.signedIn, function (req, res) {
 		raw: true,
 		attributes:["DocumentName", "Document"]
 	}).then(function(doc){
-			var fileContents = Buffer.from(doc.Document, "base64");
+		var fileContents = Buffer.from(doc.Document, "base64");
 		var mimetype = mime.getType(doc.DocumentName);
 		res.setHeader("Content-disposition", "attachment; filename=" + doc.DocumentName);
 		res.setHeader("Content-type", mimetype);

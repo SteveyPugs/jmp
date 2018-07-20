@@ -1,0 +1,30 @@
+<div class="modal-header">
+	<h5 class="modal-title">Payments&nbsp;
+		<small>Unit #{{selectedUnit}}</small>
+	</h5>
+	<button class="close" type="button" ng-click="cancel()">
+		<span>×</span>
+	</button>
+</div>
+<div class="modal-body">
+	<table class="table table-bordered">
+		<caption style="caption-side:top;padding-top:0;">Last 5 Payments</caption>
+		<thead>
+			<tr>
+				<th scope="col">Date</th>
+				<th scope="col">Payment Type</th>
+				<th scope="col">Amount</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="payment in payments">
+				<td>{{ payment.createdAt | date:"yyyy-MM-dd hh:mm a" }}</td>
+				<td>{{ payment.PaymentOption.PaymentTypeID ? (payment.PaymentOption.PaymentTypeID === 1 ? "Credit Card" : "Check" ) : "Cash" }}</td>
+				<td>{{ payment.PaymentAmount | currency : "$"}}</td>
+			</tr>
+			<tr ng-if="payments.length === 0">
+				<td colspan="3" align="center">No Payments</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

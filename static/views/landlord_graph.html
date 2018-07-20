@@ -1,0 +1,41 @@
+<div ng-include="'views/partials/nav_landlord.html'"></div>
+<br>
+<div class="container-fluid" class="ng-cloak">
+	<div class="row">
+		<div class="col">
+			<div class="card">
+				<div class="card-header">Payments ({{date | date:'MMMM yyyy'}})</div>
+				<div class="card-body">
+					<canvas id="PaymentsChart"></canvas>
+				</div>
+			</div>
+		</div>
+		<div class="col">
+			<div class="card">
+				<div class="card-header">Complaints ({{date | date:'MMMM yyyy'}})</div>
+				<div class="card-body">
+					<canvas id="ComplaintChart"></canvas>
+				</div>
+			</div>
+		</div>
+	</div>
+	<br>
+	<div class="row">
+		<div class="col">
+			<div class="card">
+				<div class="card-header">Units</div>
+				<div class="card-body">
+					<canvas id="UnitChart"></canvas>
+				</div>
+			</div>
+		</div>
+		<div class="col">
+			<div class="card">
+				<div class="card-header">Leases ({{date | date:'MMMM yyyy'}})</div>
+				<div class="card-body">
+					<canvas id="LeaseChart"></canvas>
+				</div>
+			</div>
+		</div>
+	</div> 
+</div>

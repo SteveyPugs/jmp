@@ -1,0 +1,27 @@
+<div class="modal-header">
+	<h5 class="modal-title">New Complaint</h5>
+	<button class="close" type="button" ng-click="cancel()">
+		<span>×</span>
+	</button>
+</div>
+<div class="modal-body">
+	<form class="was-validated" ng-submit="createComplaint()">
+		<div class="row">
+			<div class="col-lg">
+				<label for="GrievanceCategory">Category</label>
+				<select class="form-control form-control-sm" required ng-model="NewComplaintForm.selectedGrievanceCategory" ng-options='grievance_category as (grievance_category.GrievanceCategory) for grievance_category in grievance_categories'></select>
+				<div class="invalid-feedback">Please select a category</div>
+			</div>
+		</div>
+		<br>
+		<div class="row">
+			<div class="col-lg">
+				<label for="GrievanceMessage">Message</label>
+				<textarea class="form-control form-control-sm" required rows="3" ng-model="NewComplaintForm.GrievanceMessage"></textarea>
+				<div class="invalid-feedback">Please enter a message</div>
+			</div>
+		</div>
+		<br>
+		<button class="btn btn-primary" ng-disabled="NewComplaintForm.$invalid" type="submit">Create</button>
+	</form>
+</div>		

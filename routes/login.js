@@ -1,7 +1,12 @@
 var express = require("express");
 var bcrypt = require("bcrypt");
+var path = require("path");
 var router = express.Router();
 var models = require("../models");
+
+router.get("/", function (req, res) {
+	res.sendFile(path.resolve(__dirname + "/../" + "/static/index.html"));
+});
 
 router.post("/", function (req, res) {
 	models.User.find({
@@ -12,20 +17,10 @@ router.post("/", function (req, res) {
 	}).then(function(user){
 		if(user && bcrypt.compareSync(req.body.Password, user.UserPassword)){
 			res.cookie("UserID", user.UserID);
-			switch(user.UserLevel){
-				case 1:
-					//fill in later
-					break;
-				case 2:
-					res.redirect("/dashboard/landlord");
-					break;
-				case 3:
-					res.redirect("/dashboard/tenant");
-					break;
-			} 
+			res.send(user.UserLevel.toString());
 		}
 		else{
-			res.redirect("/fail");
+			res.send(false);
 		}
 	}).catch(function(err){
 		res.send(err.stack);
@@ -35,18 +30,7 @@ router.post("/", function (req, res) {
 router.get("/logout", function(req, res) {
 	res.clearCookie("UserID");
 	res.redirect("/");
-});
-
-router.get("/landlord", function(req, res) {
-	res.render("login", {
-		title: "Landlord"
-	});
-});
-
-router.get("/tenant", function(req, res) {
-	res.render("login", {
-		title: "Tenant"
-	});
+	// res.sendFile(path.resolve(__dirname + "/../" + "/static/index.html"));
 });
 
 module.exports = router;

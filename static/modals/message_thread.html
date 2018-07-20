@@ -1,0 +1,26 @@
+<div class="modal-header">
+	<h6 class="modal-title">Thread <small>Sorted from newest to oldest comments</small></h5>
+	<button class="close" type="button" ng-click="cancel()">
+		<span>×</span>
+	</button>
+</div>
+<div class="modal-body">
+	<form class="was-validated" ng-submit="createComplaintMessage()" ng-if="!GrievanceMessages.GrievanceStatus">
+		<div class="row">
+			<div class="col-lg">
+				<label for="GrievanceMessage">Message</label>
+				<textarea class="form-control form-control-sm" rows="3" required ng-model="$parent.GrievanceMessage"></textarea>
+				<div class="invalid-feedback">Please enter a message</div>
+			</div>
+		</div>			
+		<br>
+		<button class="btn btn-primary" ng-disabled="NewComplaintMessageForm.$invalid" type="submit">Create</button>
+	</form>
+	<hr ng-if="!GrievanceMessages.GrievanceStatus">
+	<div class="row" ng-repeat="messsage in GrievanceMessages.messages">
+		<div class="col-lg">
+			<h6><span class="badge badge-dark">{{messsage.GrievanceMessageSide ? "JMP Staff" : "Tenant"}}</span></h6>
+			<div class="alert alert-dark" role="alert">{{messsage.GrievanceMessage}}</div>
+		</div>
+	</div>
+</div>				
