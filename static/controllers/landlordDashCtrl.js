@@ -5,32 +5,28 @@ angular.module("jmp").controller("landlordDashCtrl", function($scope, $http, Upl
 			$scope.properties = response.data;
 		}, function(err){
 			console.log(err);
-		});	
+		});
 	};
 	$scope.getPropertyList();
+	$scope.getContacts = function(){
+		$http.get("/property/contact/" + $scope.selectedProperty.PropertyID).then(function(response){
+			$scope.contacts = response.data;
+		}, function(err){
+			console.log(err);
+		});
+	};
+	$scope.getUnits = function(){
+		$http.get("/unit/" + $scope.selectedProperty.PropertyID).then(function(response){
+			$scope.selectUnits = response.data;
+		}, function(err){
+			console.log(err);
+		});
+	};
 	//generates other data when property is selected
 	$scope.$watch("selectedProperty", function(){
 		if($scope.selectedProperty){
-			async.parallel({
-				getUnits: function(callback){
-					$http.get("/unit/" + $scope.selectedProperty.PropertyID).then(function(response){
-						return callback(null, response.data);
-					}, function(err){
-						return callback(err);
-					});
-				},
-				getContacts: function(callback){
-					$http.get("/property/contact/" + $scope.selectedProperty.PropertyID).then(function(response){
-						return callback(null, response.data);
-					}, function(err){
-						return callback(err);
-					});
-				}
-			}, function(err, results){
-				if(err) console.log(err);
-				$scope.selectUnits = results.getUnits;
-				$scope.contacts = results.getContacts;
-			});
+			$scope.getContacts();
+			$scope.getUnits();
 		}
 	});
 	//modals
@@ -88,7 +84,7 @@ angular.module("jmp").controller("landlordDashCtrl", function($scope, $http, Upl
 			templateUrl: "/modals/contact_new.html",
 			animation: false,
 			backdrop: false,
-			controller: function($scope, $uibModalInstance){
+			controller: function($scope, $uibModalInstance, getContacts){
 				$scope.createNewContact = function(){
 					$http.post("/property/contact", {
 						PropertyContactName: $scope.NewContactForm.EmergencyContactName,
@@ -96,7 +92,7 @@ angular.module("jmp").controller("landlordDashCtrl", function($scope, $http, Upl
 						PropertyID: selectedProperty.PropertyID
 					}).then(function(response){
 						if(response){
-							// getPropertyList();
+							getContacts();
 							$uibModalInstance.close();
 						}
 					}, function(err){
@@ -107,7 +103,12 @@ angular.module("jmp").controller("landlordDashCtrl", function($scope, $http, Upl
 					$uibModalInstance.close();
 				};
 			},
-			size: "lg"
+			size: "lg",
+			resolve:{
+				getContacts: function(){
+					return $scope.getContacts;
+				}
+			}
 		});
 	};
 	$scope.openPaymentModal = function(selectedUnit, selectedUser){
@@ -252,7 +253,7 @@ angular.module("jmp").controller("landlordDashCtrl", function($scope, $http, Upl
 			templateUrl: "/modals/tenant_new.html",
 			animation: false,
 			backdrop: false,
-			controller: function($scope, $uibModalInstance){
+			controller: function($scope, $uibModalInstance, getUnits){
 				$scope.createNewTenant = function(){
 					$http.post("/tenant", {
 						TenantName: $scope.NewTenantForm.TenantName,
@@ -260,7 +261,7 @@ angular.module("jmp").controller("landlordDashCtrl", function($scope, $http, Upl
 						UnitID: selectedUnit
 					}).then(function(response){
 						if(response){
-				// 			$scope.getPropertyInformation();
+							getUnits();
 							$uibModalInstance.close();
 						}
 					}, function(err){
@@ -271,7 +272,12 @@ angular.module("jmp").controller("landlordDashCtrl", function($scope, $http, Upl
 					$uibModalInstance.close();
 				};
 			},
-			size: "lg"
+			size: "lg",
+			resolve:{
+				getUnits: function(){
+					return $scope.getUnits;
+				}
+			}
 		});
 	};
 	//functions
