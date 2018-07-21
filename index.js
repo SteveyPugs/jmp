@@ -12,8 +12,6 @@ app.use(multipart({
 	uploadDir: __dirname + "/tmp"
 }));
 const index = require("./routes");
-const register = require("./routes/register");
-const login = require("./routes/login");
 const property = require("./routes/property");
 const unit = require("./routes/unit");
 const tenant = require("./routes/tenant");
@@ -21,8 +19,6 @@ const payment = require("./routes/payment");
 const grievance = require("./routes/grievance");
 const graph = require("./routes/graph");
 app.use("/", index);
-app.use("/register", register);
-app.use("/login", login);
 app.use("/property", property);
 app.use("/unit", unit);
 app.use("/tenant", tenant);
