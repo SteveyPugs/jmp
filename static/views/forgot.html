@@ -10,12 +10,12 @@
 			<div class="card">
 				<h5 class="card-header text-center">Forgot Password</h5>
 				<div class="card-body">
-					<form class="was-validated" ng-submit="forgot()">
+					<form class="was-validated" name="ForgotFormValidated" ng-submit="forgot()">
 						<div class="form-group">
-							<input type="email" ng-model="ForgotForm.Email" class="form-control form-control-sm" name="Email" id="Email" required placeholder="name@example.com" >
+							<input type="email" ng-model="ForgotForm.Email" class="form-control form-control-sm" required placeholder="name@example.com" >
 							<div class="invalid-feedback">Please enter a valid e-mail</div>
 						</div>
-						<button class="btn btn-dark btn-block btn-sm" ng-disabled="ForgotForm.$invalid" type="submit">Reset Password</button>
+						<button class="btn btn-dark btn-block btn-sm" ng-disabled="ForgotFormValidated.$invalid" type="submit">Reset Password</button>
 					</form>
 				</div>
 			</div>

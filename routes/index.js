@@ -110,6 +110,10 @@ router.post("/register", function (req, res) {
 	});
 });
 
+router.get("/forgot", function (req, res) {
+	res.sendFile(path.resolve(__dirname + "/../" + "/static/index.html"));
+});
+
 router.post("/forgot", function (req, res) {
 	models.User.find({
 		where:{

@@ -7,14 +7,4 @@ angular.module("jmp").controller("registerCtrl", function($scope, $http, $locati
 			console.log(err);
 		});
 	};
-	$scope.showExtraResidential = function(){
-		if(document.getElementById("RegisterTypeResidential").checked){
-			document.getElementById("ResidentialType").style.display = "block";
-			document.getElementById("ResidentialTypeSelect").required = true;
-		}
-		else{
-			document.getElementById("ResidentialType").style.display = "none";
-			document.getElementById("ResidentialTypeSelect").required = false;
-		}
-	};
 });
