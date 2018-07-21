@@ -5,7 +5,7 @@
 	</button>
 </div>
 <div class="modal-body">
-	<form class="was-validated" ng-submit="createComplaintMessage()" ng-if="!GrievanceMessages.GrievanceStatus">
+	<form class="was-validated" name="NewComplaintMessageFormValidation" ng-submit="createComplaintMessage()" ng-if="!GrievanceMessages.GrievanceStatus">
 		<div class="row">
 			<div class="col-lg">
 				<label for="GrievanceMessage">Message</label>
@@ -14,7 +14,7 @@
 			</div>
 		</div>			
 		<br>
-		<button class="btn btn-primary" ng-disabled="NewComplaintMessageForm.$invalid" type="submit">Create</button>
+		<button class="btn btn-primary" ng-disabled="NewComplaintMessageFormValidation.$invalid" type="submit">Create</button>
 	</form>
 	<hr ng-if="!GrievanceMessages.GrievanceStatus">
 	<div class="row" ng-repeat="messsage in GrievanceMessages.messages">

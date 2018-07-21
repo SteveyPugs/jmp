@@ -5,11 +5,13 @@
 	</button>
 </div>
 <div class="modal-body">
-	<form class="was-validated" ng-submit="createComplaint()">
+	<form class="was-validated" name="NewComplaintFormValidation" ng-submit="createComplaint()">
 		<div class="row">
 			<div class="col-lg">
 				<label for="GrievanceCategory">Category</label>
-				<select class="form-control form-control-sm" required ng-model="NewComplaintForm.selectedGrievanceCategory" ng-options='grievance_category as (grievance_category.GrievanceCategory) for grievance_category in grievance_categories'></select>
+				<select class="form-control form-control-sm" required ng-model="NewComplaintForm.selectedGrievanceCategory" ng-options='grievance_category as (grievance_category.GrievanceCategory) for grievance_category in grievance_categories'>
+					<option></option>
+				</select>
 				<div class="invalid-feedback">Please select a category</div>
 			</div>
 		</div>
@@ -22,6 +24,6 @@
 			</div>
 		</div>
 		<br>
-		<button class="btn btn-primary" ng-disabled="NewComplaintForm.$invalid" type="submit">Create</button>
+		<button class="btn btn-primary" ng-disabled="NewComplaintFormValidation.$invalid" type="submit">Create</button>
 	</form>
 </div>		

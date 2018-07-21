@@ -5,17 +5,17 @@
 	</button>
 </div>
 <div class="modal-body">
-	<form class="was-validated" ng-submit="createNewContact()">
+	<form class="was-validated" name="NewContactFormValidation" ng-submit="createNewContact()">
 		<div class="form-group">
 			<label for="EmergencyContactName">Contact Name</label>
-			<input type="text" name="EmergencyContactName" class="form-control form-control-sm" ng-model="NewContactForm.EmergencyContactName" placeholder="Mike Jones" required>
+			<input type="text" class="form-control form-control-sm" ng-model="NewContactForm.EmergencyContactName" placeholder="Mike Jones" required>
 			<div class="invalid-feedback">Please enter a full name</div>
 		</div>
 		<div class="form-group">
 			<label for="EmergencyContactPhone">Contact Phone Number</label>
-			<input type="text" name="EmergencyContactPhone" class="form-control form-control-sm" ng-model="NewContactForm.EmergencyContactPhone" placeholder="555-555-5555" required>
+			<input type="text" class="form-control form-control-sm" ng-model="NewContactForm.EmergencyContactPhone" placeholder="555-555-5555" required>
 			<div class="invalid-feedback">Please enter a telephone number</div>
 		</div>
-		<button class="btn btn-primary" ng-disabled="NewContactForm.$invalid" type="submit">Create</button>
+		<button class="btn btn-primary" ng-disabled="NewContactFormValidation.$invalid" type="submit">Create</button>
 	</form>
 </div>

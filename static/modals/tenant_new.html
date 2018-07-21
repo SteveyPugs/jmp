@@ -5,17 +5,17 @@
 	</button>
 </div>
 <div class="modal-body">
-	<form class="was-validated" ng-submit="createNewTenant()">
+	<form class="was-validated" name="NewTenantFormValidation" ng-submit="createNewTenant()">
 		<div class="form-group">
 			<label for="TenantName">Full Name</label>
-			<input type="text" name="TenantName" class="form-control form-control-sm" ng-model="NewTenantForm.TenantName" placeholder="John Doe" required>
+			<input type="text" class="form-control form-control-sm" ng-model="NewTenantForm.TenantName" placeholder="John Doe" required>
 			<div class="invalid-feedback">Please enter a full name</div>
 		</div>
 		<div class="form-group">
 			<label for="TenantEmail">E-Mail Address</label>
-			<input type="email" name="TenantEmail" class="form-control form-control-sm" ng-model="NewTenantForm.TenantEmail" placeholder="john.doe@example.com" required>
+			<input type="email" class="form-control form-control-sm" ng-model="NewTenantForm.TenantEmail" placeholder="john.doe@example.com" required>
 			<div class="invalid-feedback">Please enter a valid email address</div>
 		</div>
-		<button class="btn btn-primary" ng-disabled="NewTenantForm.$invalid" type="submit">Add</button>
+		<button class="btn btn-primary" ng-disabled="NewTenantFormValidation.$invalid" type="submit">Add</button>
 	</form>
 </div>

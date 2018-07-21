@@ -5,11 +5,11 @@
 	</button>
 </div>
 <div class="modal-body">
-	<form class="was-validated" ng-submit="createNewDocument()">
-		<div class="btn btn-primary" ngf-select="" name="Document" ngf-max-height="1000" ng-model="NewDocumentForm.Document">Add File</div>
+	<form class="was-validated" ng-submit="createNewDocument()" name="NewDocumentFormValidation">
+		<div class="btn btn-primary" ngf-select="" name="Document" ngf-max-height="1000" ng-required="true" ng-model="NewDocumentForm.Document">Add File</div>
 		<br>
 		<br>
-		<button class="btn btn-primary" ng-disabled="NewDocumentForm.$invalid" type="submit">Create</button>
+		<button class="btn btn-primary" ng-disabled="NewDocumentFormValidation.$invalid" type="submit">Create</button>
 	</form>
 </div>
 
