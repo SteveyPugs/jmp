@@ -1,6 +1,35 @@
 angular.module("jmp").controller("tenantDashCtrl", function($scope, $http, Upload, $uibModal, $window){
 	$scope.offset = 0;
 	$scope.page = 1;
+	$scope.getGrievances = function(){
+		$http.get("/grievance/open").then(function(response){
+			$scope.grievances_open = response.data.rows;
+			$scope.grievances_open_count = response.data.count;
+			$http.get("/grievance/closed").then(function(response){				
+				$scope.grievances_closed = response.data.rows;
+			}, function(err){
+				console.log(err);
+			});
+		}, function(err){
+			console.log(err);
+		});
+	};
+	$scope.getPayments = function(){
+		$http.get("/payment?offset=" + $scope.offset).then(function(response){
+			$scope.paymentcount = response.data.count;
+			$scope.payments = response.data.rows;
+			$scope.pageCount = Math.ceil(response.data.count / 5);
+		}, function(err){
+			console.log(err);
+		});
+	};
+	$scope.getPaymentOption = function(){
+		$http.get("/payment/option").then(function(response){
+			$scope.paymentSetting = response.data;
+		}, function(err){
+			console.log(err);
+		});
+	};
 	async.parallel({
 		getContacts: function(callback){
 			$http.get("/tenant/unit/property").then(function(response){
@@ -21,56 +50,25 @@ angular.module("jmp").controller("tenantDashCtrl", function($scope, $http, Uploa
 			});
 		},
 		getPayments: function(callback){
-			$http.get("/payment?offset=" + $scope.offset).then(function(response){
-				return callback(null, {
-					paymentcount: response.data.count,
-					payments: response.data.rows,
-					pagecount: Math.ceil(response.data.count / 5)
-				});
-			}, function(err){
-				return callback(err);
-			});
+			$scope.getPayments();
 		},
 		getPaymentOption: function(callback){
-			$http.get("/payment/option").then(function(response){
-				return callback(null, response.data);
-			}, function(err){
-				return callback(err);
-			});
+			$scope.getPaymentOption();
 		},
 		getGrievances: function(callback){
-			var gObject = {};
-			$http.get("/grievance/open").then(function(response){
-				gObject.grievances_open = response.data.rows;
-				gObject.grievances_open_count = response.data.count;
-				$http.get("/grievance/closed").then(function(response){
-					gObject.grievances_closed = response.data.rows;
-					return callback(null, gObject);
-				}, function(err){
-					return callback(err);
-				});
-			}, function(err){
-				return callback(err);
-			});
+			$scope.getGrievances();
 		}
 	}, function(err, results){
 		if(err) console.log(err);
 		$scope.contacts = results.getContacts;
 		$scope.documents = results.getDocuments;
-		$scope.paymentcount = results.getPayments.paymentcount;
-		$scope.payments = results.getPayments.payments;
-		$scope.pageCount = results.getPayments.pagecount;
-		$scope.paymentSetting = results.getPaymentOption;
-		$scope.grievances_open = results.getGrievances.grievances_open;
-		$scope.grievances_open_count = results.getGrievances.grievances_open_count;
-		$scope.grievances_closed = results.getGrievances.grievances_closed;
 	});
 	$scope.openPaymentModal = function(){
 		var modalInstance = $uibModal.open({
 			templateUrl: "/modals/payment_new.html",
 			animation: false,
 			backdrop: false,
-			controller: function($scope, $uibModalInstance){
+			controller: function($scope, $uibModalInstance, getPayments){
 				$http.get("/payment/options").then(function(response){
 					$scope.paymentoptions = response.data;
 				}, function(err){
@@ -82,8 +80,8 @@ angular.module("jmp").controller("tenantDashCtrl", function($scope, $http, Uploa
 						PaymentAmount: $scope.NewPaymentForm.PaymentAmount
 					}).then(function(response){
 						if(response){
+							getPayments();
 							$uibModalInstance.close();
-			// 				$scope.getPaymentInformation();
 						}
 					}, function(err){
 						console.log(err);
@@ -93,7 +91,12 @@ angular.module("jmp").controller("tenantDashCtrl", function($scope, $http, Uploa
 					$uibModalInstance.close();
 				};
 			},
-			size: "lg"
+			size: "lg",
+			resolve:{
+				getPayments: function(){
+					return $scope.getPayments;
+				}
+			}
 		});
 	};
 	$scope.openMessageThreadModal = function(selectedGrievance){
@@ -128,7 +131,7 @@ angular.module("jmp").controller("tenantDashCtrl", function($scope, $http, Uploa
 			templateUrl: "/modals/payment_option.html",
 			animation: false,
 			backdrop: false,
-			controller: function($scope, $uibModalInstance){
+			controller: function($scope, $uibModalInstance, getPaymentOption){
 				$scope.createNewPaymentOption = function(){
 					$http.post("/payment/option", {
 						PaymentOptionCreditCardNumber: $scope.NewPaymentOptionForm.PaymentOptionCreditCardNumber,
@@ -139,7 +142,7 @@ angular.module("jmp").controller("tenantDashCtrl", function($scope, $http, Uploa
 					}).then(function(response){
 						if(response){
 							$uibModalInstance.close();
-			// 				$scope.getPaymentInformation();
+							getPaymentOption();
 						}
 					}, function(err){
 						console.log(err);
@@ -149,7 +152,12 @@ angular.module("jmp").controller("tenantDashCtrl", function($scope, $http, Uploa
 					$uibModalInstance.close();
 				};
 			},
-			size: "lg"
+			size: "lg",
+			resolve:{
+				getPaymentOption: function(){
+					return $scope.getPaymentOption;
+				}
+			}
 		});
 	};
 	$scope.openComplaintModal = function(){
@@ -157,7 +165,7 @@ angular.module("jmp").controller("tenantDashCtrl", function($scope, $http, Uploa
 			templateUrl: "/modals/complaint_new.html",
 			animation: false,
 			backdrop: false,
-			controller: function($scope, $uibModalInstance){
+			controller: function($scope, $uibModalInstance, getGrievances){
 				$http.get("/grievance/categories").then(function(response){
 					$scope.grievance_categories = response.data;
 				}, function(err){
@@ -169,6 +177,7 @@ angular.module("jmp").controller("tenantDashCtrl", function($scope, $http, Uploa
 						GrievanceMessage: $scope.NewComplaintForm.GrievanceMessage
 					}).then(function(response){
 						if(response){
+							getGrievances();
 							$uibModalInstance.close();
 						}
 					}, function(err){
@@ -179,7 +188,12 @@ angular.module("jmp").controller("tenantDashCtrl", function($scope, $http, Uploa
 					$uibModalInstance.close();
 				};
 			},
-			size: "lg"
+			size: "lg",
+			resolve:{
+				getGrievances: function(){
+					return $scope.getGrievances;
+				}
+			}
 		});
 	};
 	$scope.generateDocument = function(documentID){
@@ -188,7 +202,7 @@ angular.module("jmp").controller("tenantDashCtrl", function($scope, $http, Uploa
 	$scope.closeGreivance = function(greivanceid){
 		$http.delete("/grievance/" + greivanceid).then(function(response){
 			if(response){
-				// $scope.getGrievances();
+				$scope.getGrievances();
 			}
 		}, function(err){
 			console.log(err);
@@ -197,12 +211,12 @@ angular.module("jmp").controller("tenantDashCtrl", function($scope, $http, Uploa
 	$scope.go = function(num){
 		$scope.page = $scope.page + num;
 		$scope.offset = ($scope.page - 1) * 5;
-		$scope.getPaymentInformation();
+		$scope.getPayments();
 	};
 	$scope.goTo = function(num){
 		$scope.page = num;
 		$scope.offset = ($scope.page - 1) * 5;
-		$scope.getPaymentInformation();
+		$scope.getPayments();
 	};
 	$scope.pageList = function(num){
 		return new Array(num);   
