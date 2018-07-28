@@ -1,0 +1,1 @@
+angular.module("jmp").constant("stripe_publishable_key", "text")

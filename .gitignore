@@ -59,3 +59,4 @@ typings/
 
 config/index.js
 tmp/*
+static/constant.js
