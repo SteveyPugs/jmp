@@ -6,6 +6,31 @@
 		<link rel="stylesheet" href="//stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
 		<link rel="stylesheet" href="/summernote/dist/summernote-bs4.css" crossorigin="anonymous">
 		<base href="/">
+		<style type="text/css">
+			.StripeElement {
+				width: -webkit-fill-available;
+				background-color: white;
+				height: 40px;
+				padding: 10px 12px;
+				border-radius: 4px;
+				border: 1px solid transparent;
+				box-shadow: 0 1px 3px 0 #e6ebf1;
+				-webkit-transition: box-shadow 150ms ease;
+				transition: box-shadow 150ms ease;
+			}
+
+			.StripeElement--focus {
+				box-shadow: 0 1px 3px 0 #cfd7df;
+			}
+
+			.StripeElement--invalid {
+				border-color: #fa755a;
+			}
+
+			.StripeElement--webkit-autofill {
+				background-color: #fefde5 !important;
+			}
+		</style>
 	</head>
 	<body ng-app="jmp">
 		<div ng-view></div>
@@ -20,6 +45,7 @@
 		<script src="/ng-file-upload/dist/ng-file-upload.min.js"></script>
 		<script src="/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
 		<script src="/summernote/dist/summernote-bs4.min.js"></script>
+		<script src="https://js.stripe.com/v3/"></script>
 		<script src="/app.js"></script>
 		<script src="/controllers/registerCtrl.js"/></script>
 		<script src="/controllers/forgotCtrl.js"/></script>

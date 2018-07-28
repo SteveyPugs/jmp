@@ -25,28 +25,23 @@
 							<div class="row">
 								<div class="col-lg">
 									<div class="card bg-light">
-										<div class="card-header">Payment Options</div>
+										<div class="card-header">Make Payment</div>
 										<div class="card-body">
-											<span class="badge badge-info" ng-if="paymentSetting.PaymentCCNumber">Credit</span>
-											<span class="badge badge-info" ng-if="paymentSetting.PaymentCheckAccount">Checking</span>
-											<br ng-if="!isObjectEmpty(paymentSetting)"/>
-											<label ng-if="paymentSetting.PaymentCCNumber"><small>****{{paymentSetting.PaymentCCNumber}}</small></label>
-											<label ng-if="paymentSetting.PaymentCheckAccount"><small>****{{paymentSetting.PaymentCheckAccount}}</small></label>
-											<br ng-if="!isObjectEmpty(paymentSetting)"/>
-											<button class="btn btn-primary btn-sm" type="button" ng-click="openPaymentOptionModal()">{{ isObjectEmpty(paymentSetting) ? "Add" : "Edit" }} Payment Option</button>
-										</div>
-									</div>
-								</div>
-							</div>
-							<br/>
-							<div class="row">
-								<div class="col-lg">
-									<div class="card bg-light">
-										<div class="card-header">Make Payment(s)</div>
-										<div class="card-body">
-											<div class="btn-group" role="group">
-												<button class="btn btn-dark" type="button" ng-click="openPaymentModal()">One-Time</button>
-											</div>
+											<div class="alert alert-light text-center" role="alert" ng-if="isMonthPaid">
+												Rent Paid
+											</div>	
+											<div class="alert alert-light text-center" role="alert" ng-if="!isMonthPaid">
+												{{ unit.UnitRent | currency : "$" }} Due {{date | date:'M/' + day + '/yy'}}
+											</div>		
+											<form id="payment-form" ng-if="!isMonthPaid">
+												<div class="form-row">
+													<div id="card-element"></div>
+													<br><br>
+													<div id="card-errors" role="alert"></div>
+												</div>
+												<br>
+												<button class="btn btn-outline-dark btn-block">Submit Payment</button>
+											</form>
 										</div>
 									</div>
 								</div>
@@ -54,32 +49,33 @@
 						</div>
 						<div class="col-lg-9">
 							<div class="card bg-light">
-								<div class="card-header">Payment(s)</div>
+								<div class="card-header">Past Payment(s)</div>
 								<div class="card-body">
 									<table class="table table-bordered">
-										<caption style="caption-side:top;padding-top:0">Showing Payments {{ ((page - 1) * 5) + 1 }} to {{ (((page - 1) * 5) + 5) > paymentcount ? paymentcount : (((page - 1) * 5) + 5) }} of {{ paymentcount }}</caption>
+										<caption ng-if="payments.length !== 0" style="caption-side:top;padding-top:0">Showing Payments {{ ((page - 1) * 5) + 1 }} to {{ (((page - 1) * 5) + 5) > paymentcount ? paymentcount : (((page - 1) * 5) + 5) }} of {{ paymentcount }}</caption>
 										<thead>
 											<tr>
 												<th scope="col">Date</th>
-												<th scope="col">Payment Type</th>
-												<th scope="col">Confirmation Code</th>
+												<th scope="col">Source</th>
 												<th scope="col">Amount</th>
 											</tr>
 										</thead>
 										<tbody>
 											<tr ng-repeat="payment in payments">
 												<td>{{ payment.createdAt | date:"yyyy-MM-dd hh:mm a" }}</td>
-												<td>{{ payment.PaymentOption.PaymentTypeID ? (payment.PaymentOption.PaymentTypeID === 1 ? "Credit Card" : "Check" ) : "Cash" }}</td>
-												<td>{{ payment.PaymentConfirmationCode }}</td>
+												<td>{{ payment.Brand }}&nbsp;{{ payment.Last4 }}</td>
 												<td>{{ payment.PaymentAmount | currency : "$"}}</td>
+											</tr>
+											<tr ng-if="payments.length === 0">
+												<td colspan="3" class="text-center">No Payments</td>
 											</tr>
 										</tbody>
 									</table>
-									<nav>
+									<nav ng-if="payments.length !== 0">
 										<ul class="pagination">
-											<li ng-class="page === 1 ? 'page-item disabled' : 'page-item'"><a class="page-link" ng-click="go(-1)">Previous</a></li>
+											<li ng-class="page === 1 || pageCount === 0 ? 'page-item disabled' : 'page-item'"><a class="page-link" ng-click="go(-1)">Previous</a></li>
 											<li ng-repeat="i in pageList(pageCount) track by $index" ng-class="page === $index + 1 ? 'page-item active' : 'page-item'"><a class="page-link" ng-click="goTo($index + 1)">{{$index + 1}}</a></li>
-											<li ng-class="page === pageCount ? 'page-item disabled' : 'page-item'"><a class="page-link" ng-click="go(1)">Next</a></li>
+											<li ng-class="page === pageCount || pageCount === 0 ? 'page-item disabled' : 'page-item'"><a class="page-link" ng-click="go(1)">Next</a></li>
 										</ul>
 									</nav>
 								</div>

@@ -19,7 +19,7 @@
 		<tbody>
 			<tr ng-repeat="payment in payments">
 				<td>{{ payment.createdAt | date:"yyyy-MM-dd hh:mm a" }}</td>
-				<td>{{ payment.PaymentOption.PaymentTypeID ? (payment.PaymentOption.PaymentTypeID === 1 ? "Credit Card" : "Check" ) : "Cash" }}</td>
+				<td>{{ payment.Brand }}&nbsp;{{ payment.Last4 }}</td>
 				<td>{{ payment.PaymentAmount | currency : "$"}}</td>
 			</tr>
 			<tr ng-if="payments.length === 0">
