@@ -1,6 +1,11 @@
-angular.module("jmp").controller("tenantDashCtrl", function($scope, $http, Upload, $uibModal, $window){
+angular.module("jmp").controller("tenantDashCtrl", function($scope, $http, Upload, $uibModal, $window, stripe_publishable_key){
 	$scope.offset = 0;
 	$scope.page = 1;
+	$scope.date = new Date();
+	$scope.lastday = function(y,m){
+		return new Date(y, m +1, 0).getDate();
+	};
+	$scope.day = $scope.lastday($scope.date.getFullYear(),$scope.date.getMonth()); 
 	$scope.getGrievances = function(){
 		$http.get("/grievance/open").then(function(response){
 			$scope.grievances_open = response.data.rows;
@@ -18,14 +23,64 @@ angular.module("jmp").controller("tenantDashCtrl", function($scope, $http, Uploa
 		$http.get("/payment?offset=" + $scope.offset).then(function(response){
 			$scope.paymentcount = response.data.count;
 			$scope.payments = response.data.rows;
+			$scope.isMonthPaid = response.data.isMonthPaid;
 			$scope.pageCount = Math.ceil(response.data.count / 5);
-		}, function(err){
-			console.log(err);
-		});
-	};
-	$scope.getPaymentOption = function(){
-		$http.get("/payment/option").then(function(response){
-			$scope.paymentSetting = response.data;
+			if(!$scope.isMonthPaid){
+				var stripe = Stripe(stripe_publishable_key);
+				var elements = stripe.elements();
+				var style = {
+					base: {
+						color: "#32325d",
+						fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+						fontSmoothing: "antialiased",
+						fontSize: "16px",
+						"::placeholder": {
+							color: "#aab7c4"
+						}
+					},
+					invalid: {
+						color: "#fa755a",
+						iconColor: "#fa755a"
+					}
+				};
+				var card = elements.create("card", {style: style});
+				card.mount("#card-element");
+				card.addEventListener("change", function(event) {
+					var displayError = document.getElementById("card-errors");
+					if (event.error) {
+						displayError.textContent = event.error.message;
+					} else {
+						displayError.textContent = "";
+					}
+				});
+				var form = document.getElementById("payment-form");
+				form.addEventListener("submit", function(event) {
+					event.preventDefault();
+					stripe.createToken(card).then(function(result) {
+						console.log(result)
+						if(result.error){
+							var errorElement = document.getElementById("card-errors");
+							errorElement.textContent = result.error.message;
+						}
+						else {
+							stripeTokenHandler(result.token);
+						}
+					});
+				});
+				function stripeTokenHandler(token) {
+					$http.post("/payment", {
+						token: token.id,
+						PaymentAmount: $scope.unit.UnitRent
+					}).then(function(response){
+						if(response){
+							$scope.getPayments();
+							alert("Payment Complete");
+						}
+					}, function(err){
+						console.log(err);
+					});
+				}
+			}
 		}, function(err){
 			console.log(err);
 		});
@@ -51,54 +106,25 @@ angular.module("jmp").controller("tenantDashCtrl", function($scope, $http, Uploa
 		},
 		getPayments: function(callback){
 			$scope.getPayments();
-		},
-		getPaymentOption: function(callback){
-			$scope.getPaymentOption();
+			return callback(null, null);
 		},
 		getGrievances: function(callback){
 			$scope.getGrievances();
-		}
+			return callback(null, null)
+		},
+		getUnit: function(callback){
+			$http.get("/unit/rent").then(function(response){
+				return callback(null, response.data);
+			}, function(err){
+				return callback(err);
+			});
+		},
 	}, function(err, results){
 		if(err) console.log(err);
 		$scope.contacts = results.getContacts;
 		$scope.documents = results.getDocuments;
+		$scope.unit = results.getUnit;
 	});
-	$scope.openPaymentModal = function(){
-		var modalInstance = $uibModal.open({
-			templateUrl: "/modals/payment_new.html",
-			animation: false,
-			backdrop: false,
-			controller: function($scope, $uibModalInstance, getPayments){
-				$http.get("/payment/options").then(function(response){
-					$scope.paymentoptions = response.data;
-				}, function(err){
-					console.log(err);
-				});
-				$scope.createNewPayment = function(){
-					$http.post("/payment", {
-						PaymentOptionID: $scope.NewPaymentForm.selectedPaymentType.PaymentOptionID,
-						PaymentAmount: $scope.NewPaymentForm.PaymentAmount
-					}).then(function(response){
-						if(response){
-							getPayments();
-							$uibModalInstance.close();
-						}
-					}, function(err){
-						console.log(err);
-					});
-				};
-				$scope.cancel = function () {
-					$uibModalInstance.close();
-				};
-			},
-			size: "lg",
-			resolve:{
-				getPayments: function(){
-					return $scope.getPayments;
-				}
-			}
-		});
-	};
 	$scope.openMessageThreadModal = function(selectedGrievance){
 		var modalInstance = $uibModal.open({
 			templateUrl: "/modals/message_thread.html",
@@ -124,40 +150,6 @@ angular.module("jmp").controller("tenantDashCtrl", function($scope, $http, Uploa
 				};
 			},
 			size: "lg"
-		});
-	};
-	$scope.openPaymentOptionModal = function(){
-		var modalInstance = $uibModal.open({
-			templateUrl: "/modals/payment_option.html",
-			animation: false,
-			backdrop: false,
-			controller: function($scope, $uibModalInstance, getPaymentOption){
-				$scope.createNewPaymentOption = function(){
-					$http.post("/payment/option", {
-						PaymentOptionCreditCardNumber: $scope.NewPaymentOptionForm.PaymentOptionCreditCardNumber,
-						PaymentOptionCreditCardExpiration: $scope.NewPaymentOptionForm.PaymentOptionCreditCardExpirationMonth ? $scope.NewPaymentOptionForm.PaymentOptionCreditCardExpirationMonth + "/" + $scope.NewPaymentOptionForm.PaymentOptionCreditCardExpirationYear : null,
-						PaymentOptionCreditCardCVV: $scope.NewPaymentOptionForm.PaymentOptionCreditCardCV,
-						PaymentOptionCheckingRouting: $scope.NewPaymentOptionForm.PaymentOptionCheckingRouting,
-						PaymentOptionCheckingAccount: $scope.NewPaymentOptionForm.PaymentOptionCheckingAccount
-					}).then(function(response){
-						if(response){
-							$uibModalInstance.close();
-							getPaymentOption();
-						}
-					}, function(err){
-						console.log(err);
-					});
-				};
-				$scope.cancel = function () {
-					$uibModalInstance.close();
-				};
-			},
-			size: "lg",
-			resolve:{
-				getPaymentOption: function(){
-					return $scope.getPaymentOption;
-				}
-			}
 		});
 	};
 	$scope.openComplaintModal = function(){
