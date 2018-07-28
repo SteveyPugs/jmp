@@ -28,7 +28,7 @@ router.post("/", security.signedIn, function (req, res) {
 		PropertyUnitCount: req.body.RegisterNumberOfUnits,
 		PropertyType: req.body.RegisterTypeOptions,
 		UserID: req.cookies.UserID,
-		PropertyResidentialType: req.body.selectedResidentialType
+		PropertyResidentialType: req.body.ResidentialType
 	}).then(function(property){
 		var units = [];
 		lodash.times(req.body.RegisterNumberOfUnits, function(v){

@@ -4,7 +4,7 @@ var models = require("../models");
 var router = express.Router();
 var security = require("./security");
 
-router.get("/:PropertyID", security.signedIn, function (req, res) {
+router.get("/property/:PropertyID", security.signedIn, function (req, res) {
 	models.Unit.findAll({
 		where:{
 			PropertyID: req.params.PropertyID
@@ -31,5 +31,26 @@ router.get("/:PropertyID", security.signedIn, function (req, res) {
 	});
 });
 
+router.get("/rent", security.signedIn, function (req, res) {
+	models.UnitTenant.find({
+		where:{
+			UserID: req.cookies.UserID
+		},
+		raw: true
+	}).then(function(unitteant){
+		models.Unit.find({
+			where:{
+				UnitID: unitteant.UnitID
+			},
+			raw: true
+		}).then(function(unit){
+			res.send(unit);
+		}).catch(function(err){
+			res.send(err);
+		});
+	}).catch(function(err){
+		res.send(err);
+	});
+});
 
 module.exports = router;

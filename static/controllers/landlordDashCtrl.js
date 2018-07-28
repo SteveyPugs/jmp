@@ -16,7 +16,7 @@ angular.module("jmp").controller("landlordDashCtrl", function($scope, $http, Upl
 		});
 	};
 	$scope.getUnits = function(){
-		$http.get("/unit/" + $scope.selectedProperty.PropertyID).then(function(response){
+		$http.get("/unit/property/" + $scope.selectedProperty.PropertyID).then(function(response){
 			$scope.selectUnits = response.data;
 		}, function(err){
 			console.log(err);
@@ -257,6 +257,7 @@ angular.module("jmp").controller("landlordDashCtrl", function($scope, $http, Upl
 				$scope.createNewTenant = function(){
 					$http.post("/tenant", {
 						TenantName: $scope.NewTenantForm.TenantName,
+						TenantRentAmount: $scope.NewTenantForm.TenantRentAmount,
 						TenantEmail: $scope.NewTenantForm.TenantEmail,
 						UnitID: selectedUnit
 					}).then(function(response){

@@ -25,7 +25,8 @@ router.post("/", security.signedIn, function (req, res) {
 			UserID: user.UserID
 		}).then(function(unit_tenant){
 			models.Unit.update({
-				UnitVacant: false
+				UnitVacant: false,
+				UnitRent: req.body.TenantRentAmount
 			},{
 				where:{
 					UnitID: req.body.UnitID

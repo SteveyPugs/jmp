@@ -9,6 +9,9 @@ var config = {
 		user: "user",
 		password: "password",
 		database: "database",
+	},
+	stripe:{
+		secret_key: "secret_key"
 	}
 };
 
