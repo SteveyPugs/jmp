@@ -23,9 +23,6 @@ var models = [{
 	name: "PropertyContact",
 	file: "property_contact"
 },{
-	name: "PaymentOption",
-	file: "paymentoption"
-},{
 	name: "Payment",
 	file: "payment"
 },{
@@ -92,24 +89,6 @@ sequelize.authenticate().then(function(err){
 			foreignKey: {
 				name: "UserID",
 				allowNull: false
-			}
-		});
-		model.PaymentOption.belongsTo(model.User, {
-			foreignKey: {
-				name: "UserID",
-				allowNull: false
-			}
-		});
-		model.PaymentOption.hasMany(model.Payment, {
-			foreignKey: {
-				name: "PaymentOptionID",
-				allowNull: true
-			}
-		});
-		model.Payment.belongsTo(model.PaymentOption, {
-			foreignKey: {
-				name: "PaymentOptionID",
-				allowNull: true
 			}
 		});
 		model.User.hasMany(model.Payment, {

@@ -28,6 +28,14 @@ router.get("/login", function (req, res) {
 	res.sendFile(path.resolve(__dirname + "/../" + "/static/index.html"));
 });
 
+router.get("/register/complete", function (req, res) {
+	res.sendFile(path.resolve(__dirname + "/../" + "/static/index.html"));
+});
+
+router.get("/reset", function (req, res) {
+	res.sendFile(path.resolve(__dirname + "/../" + "/static/index.html"));
+});
+
 router.post("/login", function (req, res) {
 	models.User.find({
 		where:{
@@ -84,7 +92,7 @@ router.post("/register", function (req, res) {
 					PropertyUnitCount: req.body.RegisterNumberOfUnits,
 					PropertyType: req.body.RegisterTypeOptions,
 					UserID: user.UserID,
-					PropertyResidentialType: req.body.ResidentialType
+					PropertyResidentialType: req.body.ResidentialTypeSelect
 				}).then(function(property){
 					var units = [];
 					lodash.times(req.body.RegisterNumberOfUnits, function(v){

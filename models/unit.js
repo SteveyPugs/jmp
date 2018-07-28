@@ -14,6 +14,10 @@ module.exports = function(sequelize, DataTypes){
 			type: DataTypes.BOOLEAN,
 			allowNull: false,
 			defaultValue: true
+		},
+		UnitRent: {
+			type: DataTypes.FLOAT,
+			allowNull: true
 		}
 	},{
 		paranoid: true
