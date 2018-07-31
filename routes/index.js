@@ -1,12 +1,19 @@
 var express = require("express");
 var lodash = require("lodash");
+var fs = require("fs");
 var async = require("async");
 var Chance = require("chance");
 var bcrypt = require("bcrypt");
 var path = require("path");
+var nodemailer = require("nodemailer");
 var models = require("../models");
 var security = require("./security");
 var router = express.Router();
+var transporter = nodemailer.createTransport({
+	sendmail: true,
+	newline: "unix",
+	path: "/usr/sbin/sendmail"
+});
 
 router.get("/dashboard/landlord", security.signedIn, function (req, res){
 	res.sendFile(path.resolve(__dirname + "/../" + "/static/index.html"));
@@ -102,7 +109,17 @@ router.post("/register", function (req, res) {
 						});
 					});
 					models.Unit.bulkCreate(units).then(function(units){
-						res.send(true);
+						var email_template = fs.readFileSync("./email_template/index.html", "utf8");
+						var subject = "Thanks for Registering your property";
+						transporter.sendMail({
+							from: "no-reply@jmaxwellproperties.com",
+							to: req.body.RegisterEmail,
+							subject: subject,
+							html: email_template.replace("#SUBJECT#", subject).replace("#HEADLINE#", "Welcome").replace("#TEXT#", "Thanks for signing up. To complete the process here is your password (" + password + ") to login. Use the email address you signed up with to login.")
+						}, function(err, info){
+							if(err) res.send(err.stack);
+							else res.send(true);
+						});
 					}).catch(function(err){
 						res.send(err.stack);
 					});
