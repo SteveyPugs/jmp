@@ -9,6 +9,12 @@ var fs = require("fs");
 var models = require("../models");
 var router = express.Router();
 var security = require("./security");
+var nodemailer = require("nodemailer");
+var transporter = nodemailer.createTransport({
+	sendmail: true,
+	newline: "unix",
+	path: "/usr/sbin/sendmail"
+});
 
 router.post("/", security.signedIn, function (req, res) {
 	var chance = new Chance();
@@ -32,7 +38,17 @@ router.post("/", security.signedIn, function (req, res) {
 					UnitID: req.body.UnitID
 				}
 			}).then(function(unit){
-				return res.send(true);
+				var email_template = fs.readFileSync("./email_template/index.html", "utf8");
+				var subject = "You have been registered as a tenant";
+				transporter.sendMail({
+					from: "no-reply@jmaxwellproperties.com",
+					to: req.body.RegisterEmail,
+					subject: subject,
+					html: email_template.replace("#SUBJECT#", subject).replace("#HEADLINE#", "Welcome").replace("#TEXT#", "You probably know this already but your landlord has registed you through J. Maxwell Properties. To complete the process here is your password (" + password + ") to login. Use this email address with login.")
+				}, function(err, info){
+					if(err) res.send(err.stack);
+					else res.send(true);
+				});
 			}).catch(function(err){
 				res.send(err);
 			});

@@ -5,10 +5,10 @@ var async = require("async");
 var Chance = require("chance");
 var bcrypt = require("bcrypt");
 var path = require("path");
-var nodemailer = require("nodemailer");
 var models = require("../models");
 var security = require("./security");
 var router = express.Router();
+var nodemailer = require("nodemailer");
 var transporter = nodemailer.createTransport({
 	sendmail: true,
 	newline: "unix",
