@@ -25,6 +25,9 @@
 					<br>
 					<h5 class="card-title">Emergency Contacts</h5>
 					<hr>
+					<address ng-if="contacts.length === 0">
+						<small><i>No Contacts</i></small>
+					</address>
 					<address ng-repeat="contact in contacts">
 						<i>
 							<small>{{contact.PropertyContactName}} ({{contact.PropertyContactTelephone}})</small>
